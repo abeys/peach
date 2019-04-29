@@ -105,7 +105,7 @@ class SideMenuViewController: UIViewController {
         }
     }
     @objc func addProject(_ sender: UIButton) {
-        print("puch button!!!")
+        print("push button!!!")
     }
 }
 

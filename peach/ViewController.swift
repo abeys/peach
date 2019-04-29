@@ -22,20 +22,13 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-/*
-        contentViewController.viewControllers[0].view.backgroundColor = .white
-        contentViewController.viewControllers[0].navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sidemenu", style: .plain, target: self, action: #selector(sidemenuBarButtonTapped(sender:)))
-        addChild(contentViewController)
-        view.addSubview(contentViewController.view)
-        contentViewController.didMove(toParent: self)
-*/
+        
         sidemenuViewController.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
     }
 
-    @objc private func sidemenuBarButtonTapped(sender: Any) {
+    @IBAction func tapSidemenu(_ sender: Any) {
         showSidemenu(animated: true)
     }
 

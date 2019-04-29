@@ -59,6 +59,16 @@ class SideMenuViewController: UIViewController {
         contentView.addSubview(tableView)
         tableView.reloadData()
 
+        let button =  UIButton(frame: CGRect(x: self.view.frame.width-150, y: self.view.frame.height-100, width: self.view.frame.width, height: self.view.frame.height / 4))
+        button.setTitle(" + ", for: UIControl.State.normal)
+        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        button.backgroundColor = UIColor.red
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = 14.0
+        button.sizeToFit()
+        button.addTarget(self, action: #selector(addProject(_:)), for: UIControl.Event.touchUpInside)
+        contentView.addSubview(button)
+
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(backgroundTapped(sender:)))
         tapGestureRecognizer.delegate = self
         view.addGestureRecognizer(tapGestureRecognizer)
@@ -94,7 +104,9 @@ class SideMenuViewController: UIViewController {
             completion?(true)
         }
     }
-
+    @objc func addProject(_ sender: UIButton) {
+        print("puch button!!!")
+    }
 }
 
 extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {

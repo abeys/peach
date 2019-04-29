@@ -16,15 +16,6 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     let sidemenuViewController = SideMenuViewController()
     let contentViewController = UINavigationController(rootViewController: UIViewController())
     
-    var data = [1,2,3,4,5,6,7]
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
-    }
-
     private var isShownSidemenu: Bool {
         return sidemenuViewController.parent == self
     }
@@ -65,7 +56,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         })
     }
     
-    func tableView(_ tableView: UITableView, reorderRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let item = data[sourceIndexPath.row]
         data.remove(at: sourceIndexPath.row)
         data.insert(item, at: destinationIndexPath.row)

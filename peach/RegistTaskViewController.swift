@@ -55,7 +55,15 @@ class RegistTaskViewController : UIViewController,UITextFieldDelegate {
     }
     
     @IBAction func clickRegist(_ sender: Any) {
+        task?.task_id = 1
+        task?.project_id = 1
+        task?.name = taskName.text
+        task?.date = "4/29"
+        task?.start_time = "13:00"
+        task?.done_flg = "0"
+        task?.duration = "1.5h"
+        task?.rabel = ""
+        delegate?.didRegistTask(index: index!, task: task!)
         
-        delegate?.didRegistTask(index: index, task: task)
     }
 }

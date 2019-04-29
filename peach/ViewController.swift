@@ -76,6 +76,10 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     }
 
     @IBAction func returnToMain(segue: UIStoryboardSegue) { }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let registVC = segue.destination as! RegistTaskViewController
+        registVC.delegate = self
+    }
     /*
     @IBAction func tapAddTask(_ sender: Any) {
         showRegistTask(animated: true)
@@ -88,6 +92,9 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
     func didRegistTask(index:Int, task: Task) {
         print("task added.")
+        if index == -1 {
+            data.append(task)
+        }
     }
     
     func didCancelRegistTask() {

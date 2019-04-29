@@ -1,0 +1,13 @@
+//
+//  TaskCell.swift
+//  peach
+//
+//  Created by matsumura shiori on 2019/04/29.
+//  Copyright © 2019 matsumura shiori. All rights reserved.
+//
+
+import UIKit
+
+class TaskCell : UITableViewCell {
+    @IBOutlet weak var taskId: UILabel!
+}

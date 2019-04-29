@@ -10,5 +10,6 @@ import UIKit
 
 class RegistTaskViewController : UIViewController {
     
+    let height = 150
     
 }

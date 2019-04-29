@@ -12,6 +12,7 @@
 		9D5C89092276B2560071119D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D5C89072276B2560071119D /* Main.storyboard */; };
 		9D5C890B2276B2590071119D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D5C890A2276B2590071119D /* Assets.xcassets */; };
 		9D5C890E2276B2590071119D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D5C890C2276B2590071119D /* LaunchScreen.storyboard */; };
+		D01949382276BD24006EDE01 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01949372276BD24006EDE01 /* SideMenuViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		9D5C890A2276B2590071119D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9D5C890D2276B2590071119D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9D5C890F2276B2590071119D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D01949372276BD24006EDE01 /* SideMenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			children = (
 				9D5C89032276B2560071119D /* AppDelegate.swift */,
 				9D5C89052276B2560071119D /* ViewController.swift */,
+				D01949372276BD24006EDE01 /* SideMenuViewController.swift */,
 				9D5C89072276B2560071119D /* Main.storyboard */,
 				9D5C890A2276B2590071119D /* Assets.xcassets */,
 				9D5C890C2276B2590071119D /* LaunchScreen.storyboard */,
@@ -136,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D5C89062276B2560071119D /* ViewController.swift in Sources */,
+				D01949382276BD24006EDE01 /* SideMenuViewController.swift in Sources */,
 				9D5C89042276B2560071119D /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,17 +9,24 @@
 import UIKit
 
 class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource {
-
     let sidemenuViewController = SideMenuViewController()
     let contentViewController = UINavigationController(rootViewController: UIViewController())
     
+    var data = [1,2,3,4,5,6,7]
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return data.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return UITableViewCell()
+    }
+
     private var isShownSidemenu: Bool {
         return sidemenuViewController.parent == self
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
 
         contentViewController.viewControllers[0].view.backgroundColor = .white
         contentViewController.viewControllers[0].navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sidemenu", style: .plain, target: self, action: #selector(sidemenuBarButtonTapped(sender:)))

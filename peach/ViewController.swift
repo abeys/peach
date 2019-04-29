@@ -7,12 +7,13 @@
 //
 
 import UIKit
+import SwiftReorder
 
 class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource {
     
-    var data = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
-    var projects:[Project] = []
-
+//    var data = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
+    var data: [Task] = []
+    
     @IBOutlet weak var naviBar: UINavigationBar!
     @IBOutlet weak var naviItem: UINavigationItem!
     @IBOutlet weak var tableView: UITableView!
@@ -50,8 +51,26 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         naviItem.title = projects[0].project_id
 
         sidemenuViewController.delegate = self
+        tableView.reorder.delegate = self
+        // delegateの初期化
         tableView.delegate = self
         tableView.dataSource = self
+        // セルの初期化
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        var tasks : [Task] = []
+        for i in 1...10 {
+            let task = Task()
+            task.task_id = i
+            task.name = "プロジェクト \(i)"
+            task.date = "2019/04/29"
+            task.done_flg = "0"
+            task.duration = "20"
+            task.project_id = 1
+            task.project_name = "peach"
+            task.start_time = "12:00"
+            tasks.append(task)
+        }
+        data = tasks
     }
 
     @IBAction func tapAddTask(_ sender: Any) {
@@ -87,10 +106,10 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             registView!.center.y += CGFloat(registVC.height)
         }, completion: nil)
         /*
-        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseInOut, animations: {
-            self.tableView!.center.y += CGFloat(registVC.height)
-        }, completion: nil)
-        */
+         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseInOut, animations: {
+         self.tableView!.center.y += CGFloat(registVC.height)
+         }, completion: nil)
+         */
     }
     
     private func showSidemenu(contentAvailability: Bool = true, animated: Bool) {
@@ -117,11 +136,18 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         })
     }
     
+    func tableView1(_ tableView: UITableView, reorderRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let item = data[sourceIndexPath.row]
+        data.remove(at: sourceIndexPath.row)
+        data.insert(item, at: destinationIndexPath.row)
+    }
+    
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let item = data[sourceIndexPath.row]
         data.remove(at: sourceIndexPath.row)
         data.insert(item, at: destinationIndexPath.row)
     }
+
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
@@ -130,7 +156,8 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: "taskcell", for: indexPath) as? TaskCell {
-            cell.taskId.text = String(data[indexPath.row])
+            // TODO 配列の長さに応じたループ回数でないとエラーになる(現状は10回固定)
+            cell.taskId.text = String(data[indexPath.row].task_id)
             return cell
         }
         return UITableViewCell()
@@ -156,8 +183,36 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         print("タップされたのは" + index.description + "番のセルで" + "内容は" + content + "でした")
     }
     
+    func tableView5(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return data.count
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView6(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // ドラッグされているセルを返す
+        if let spacer = tableView.reorder.spacerCell(for: indexPath) {
+            return spacer
+        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        cell.textLabel?.text = String(data[indexPath.row].task_id)
+        return cell
+    }
 }
 
+// セルの並び替え
+extension ViewController: TableViewReorderDelegate {
+    func tableView(_ tableView: UITableView, reorderRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        // Update data model
+        let item = data[sourceIndexPath.row]
+        data.remove(at: sourceIndexPath.row)
+        data.insert(item, at: destinationIndexPath.row)
+    }
+}
+
+// スライドメニューバー処理
 extension ViewController: SidemenuViewControllerDelegate {
     func parentViewControllerForSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> UIViewController {
         return self

@@ -1,0 +1,18 @@
+{
+  "Mac" : [
+
+  ],
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+
+  ],
+  "commitish" : "6.0.2",
+  "iOS" : [
+    {
+      "name" : "SwiftReorder",
+      "hash" : "7357121a4488b317a596252d8ba3374d737f62979e7f358e4cd11bb53697b396"
+    }
+  ]
+}

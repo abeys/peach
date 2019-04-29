@@ -10,50 +10,75 @@ import UIKit
 
 class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource {
 
-    var sections:[String] = ["プロジェクト"] //["プロジェクト","タグ"]
-    var projects:[String] = ["WORK","仕事","アプリ開発","PaDia","プライベート"]
-    var tags:[String] = ["task","meeting","休憩"]
+    let sidemenuViewController = SideMenuViewController()
+    let contentViewController = UINavigationController(rootViewController: UIViewController())
     
-    var data = [1,2,3,4,5,6,7]
-    @IBOutlet weak var tableview: UITableView!
-    
+    private var isShownSidemenu: Bool {
+        return sidemenuViewController.parent == self
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableview.dataSource = self
-        tableview.delegate = self
+
+
+        contentViewController.viewControllers[0].view.backgroundColor = .white
+        contentViewController.viewControllers[0].navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sidemenu", style: .plain, target: self, action: #selector(sidemenuBarButtonTapped(sender:)))
+        addChild(contentViewController)
+        view.addSubview(contentViewController.view)
+        contentViewController.didMove(toParent: self)
+        
+        sidemenuViewController.delegate = self
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+    @objc private func sidemenuBarButtonTapped(sender: Any) {
+        showSidemenu(animated: true)
     }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "taskcell", for: indexPath) as? TaskCell {
-            cell.taskId.text = String(data[indexPath.row])
-            return cell
+    private func showSidemenu(contentAvailability: Bool = true, animated: Bool) {
+        if isShownSidemenu {
+            return
         }
-        return UITableViewCell()
+        addChild(sidemenuViewController)
+        sidemenuViewController.view.autoresizingMask = .flexibleHeight
+        sidemenuViewController.view.frame = contentViewController.view.bounds
+        view.insertSubview(sidemenuViewController.view, aboveSubview: contentViewController.view)
+        sidemenuViewController.didMove(toParent: self)
+        if contentAvailability {
+            sidemenuViewController.showContentView(animated: animated)
+        }
+    }
+
+    private func hideSidemenu(animated: Bool) {
+        if !isShownSidemenu { return }
+        
+        sidemenuViewController.hideContentView(animated: animated, completion: { (_) in
+            self.sidemenuViewController.willMove(toParent: nil)
+            self.sidemenuViewController.removeFromParent()
+            self.sidemenuViewController.view.removeFromSuperview()
+        })
+    }
+}
+
+extension ViewController: SidemenuViewControllerDelegate {
+    func parentViewControllerForSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> UIViewController {
+        return self
     }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        let swipeCellA = UITableViewRowAction(style: .default, title: "編集") { action, index in
-            self.swipeContentsTap(content: "edit", index: index.row)
-        }
-        let swipeCellB = UITableViewRowAction(style: .default, title: "削除") { action, index in
-            self.swipeContentsTap(content: "delete", index: index.row)
-        }
-        swipeCellA.backgroundColor = .blue
-        swipeCellB.backgroundColor = .red
-        return [swipeCellB, swipeCellA]
-    }
-    
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    func shouldPresentForSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> Bool {
+        /* You can specify sidemenu availability */
         return true
     }
     
-    func swipeContentsTap(content: String, index: Int) {
-        print("タップされたのは" + index.description + "番のセルで" + "内容は" + content + "でした")
+    func sidemenuViewControllerDidRequestShowing(_ sidemenuViewController: SideMenuViewController, contentAvailability: Bool, animated: Bool) {
+        showSidemenu(contentAvailability: contentAvailability, animated: animated)
+    }
+    
+    func sidemenuViewControllerDidRequestHiding(_ sidemenuViewController: SideMenuViewController, animated: Bool) {
+        hideSidemenu(animated: animated)
+    }
+    
+    func sidemenuViewController(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath) {
+        hideSidemenu(animated: true)
     }
 }
 

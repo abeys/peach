@@ -92,7 +92,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     @IBAction func returnToMain(segue: UIStoryboardSegue) { }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let registVC = segue.destination as! RegistTaskViewController
-        registVC.delegate = self
+        registVC.delegate = self as! RegistTaskViewControllerDelegate
     }
     /*
     @IBAction func tapAddTask(_ sender: Any) {
@@ -132,7 +132,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let registVC = storyboard.instantiateViewController(withIdentifier: "registTask") as! RegistTaskViewController
         let registView = registVC.view
-        registVC.delegate = self
+        registVC.delegate = self as! RegistTaskViewControllerDelegate
         // 表示するRegistTaskの大きさ、位置を計算する
         var contentRect = registView!.bounds
         contentRect.size.height = CGFloat(registVC.height)
@@ -163,7 +163,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let registVC = storyboard.instantiateViewController(withIdentifier: "registTask") as! RegistTaskViewController
         let registView = registVC.view
-        registVC.delegate = self
+        registVC.delegate = self as! RegistTaskViewControllerDelegate
         // アニメーションで隠してから
         UIView.animate(withDuration: registVC.duration, delay: 0.0, options: .curveEaseInOut, animations: {
             registView!.center.y -= CGFloat(registVC.height)

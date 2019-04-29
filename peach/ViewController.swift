@@ -13,7 +13,8 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
 //    var data = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
     var data: [Task] = []
-    
+    var projects:[Project] = []
+
     @IBOutlet weak var naviBar: UINavigationBar!
     @IBOutlet weak var naviItem: UINavigationItem!
     @IBOutlet weak var tableView: UITableView!
@@ -31,24 +32,24 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         super.viewDidLoad()
 
         // テスト用データ
-        var tasks:[Task] = []
+        var taskList:[Task] = []
         let task1 = Task()
-        task1.project_id="001"
-        task1.project="プロジェ１"
+        task1.project_id=1
+        task1.project_name="プロジェ１"
         task1.name="001-タスク１"
         task1.date="2019-04-01"
         task1.start_time="00:00"
         task1.done_flg="0"
         task1.duration="01:00"
         task1.rabel="作業"
-        tasks.append(task1)
+        taskList.append(task1)
         let project1 = Project()
-        project1.project_id = "001"
-        project1.tasks = tasks
+        project1.project_id = 1
+        project1.tasks = taskList
         projects.append(project1)
 
         // デフォルトで先頭のプロジェクト名を表示
-        naviItem.title = projects[0].project_id
+        naviItem.title = projects[0].tasks[0].project_name
 
         sidemenuViewController.delegate = self
         tableView.reorder.delegate = self
@@ -232,6 +233,7 @@ extension ViewController: SidemenuViewControllerDelegate {
     }
     
     func sidemenuViewController(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath) {
+        naviItem.title = projects[indexPath.row].tasks[0].project_name
         hideSidemenu(animated: true)
     }
 
@@ -242,5 +244,10 @@ extension ViewController: SidemenuViewControllerDelegate {
     func setProjectName(projectName: String){
         naviItem.title = projectName
     }
+
+    func appendProject(project: Project){
+        projects.append(project)
+    }
+
 }
 

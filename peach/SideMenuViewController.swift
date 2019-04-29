@@ -14,6 +14,9 @@ protocol SidemenuViewControllerDelegate: class {
     func sidemenuViewControllerDidRequestShowing(_ sidemenuViewController: SideMenuViewController, contentAvailability: Bool, animated: Bool)
     func sidemenuViewControllerDidRequestHiding(_ sidemenuViewController: SideMenuViewController, animated: Bool)
     func sidemenuViewController(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath)
+    func getProjects() -> [Project]
+    func setProjectName(projectName: String)
+    func appendProject(project: Project)
 }
 
 class SideMenuViewController: UIViewController {
@@ -21,13 +24,13 @@ class SideMenuViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .plain)
     weak var delegate: SidemenuViewControllerDelegate?
     var sections:[String] = ["プロジェクト"]
-    var projects:[String] = ["WORK","仕事","アプリ開発","PaDia","プライベート"]
     var tags:[String] = ["task","meeting","休憩"]
-
+    var projects:[Project] = []
+    
     private var contentMaxWidth: CGFloat {
         return view.bounds.width * 0.8
     }
-
+    
     private var contentRatio: CGFloat {
         get {
             return contentView.frame.maxX / contentMaxWidth
@@ -45,7 +48,7 @@ class SideMenuViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         var contentRect = view.bounds
         contentRect.size.width = contentMaxWidth
         contentRect.origin.x = -contentRect.width
@@ -54,6 +57,8 @@ class SideMenuViewController: UIViewController {
         contentView.autoresizingMask = .flexibleHeight
         view.addSubview(contentView)
         
+        projects = (delegate?.getProjects())!
+        
         tableView.frame = contentView.bounds
         tableView.separatorInset = .zero
         tableView.dataSource = self
@@ -61,7 +66,7 @@ class SideMenuViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Default")
         contentView.addSubview(tableView)
         tableView.reloadData()
-
+        
         let button =  UIButton(frame: CGRect(x: self.view.frame.width-150, y: self.view.frame.height-100, width: self.view.frame.width, height: self.view.frame.height / 4))
         button.setTitle(" + ", for: UIControl.State.normal)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
@@ -71,12 +76,12 @@ class SideMenuViewController: UIViewController {
         button.sizeToFit()
         button.addTarget(self, action: #selector(addProject(_:)), for: UIControl.Event.touchUpInside)
         contentView.addSubview(button)
-
+        
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(backgroundTapped(sender:)))
         tapGestureRecognizer.delegate = self
         view.addGestureRecognizer(tapGestureRecognizer)
     }
-
+    
     @objc private func backgroundTapped(sender: UITapGestureRecognizer) {
         hideContentView(animated: true) { (_) in
             self.willMove(toParent: nil)
@@ -84,7 +89,7 @@ class SideMenuViewController: UIViewController {
             self.view.removeFromSuperview()
         }
     }
-
+    
     func showContentView(animated: Bool) {
         if animated {
             UIView.animate(withDuration: 0.3) {
@@ -94,7 +99,7 @@ class SideMenuViewController: UIViewController {
             contentRatio = 1.0
         }
     }
-
+    
     func hideContentView(animated: Bool, completion: ((Bool) -> Swift.Void)?) {
         if animated {
             UIView.animate(withDuration: 0.2, animations: {
@@ -112,20 +117,26 @@ class SideMenuViewController: UIViewController {
                                            message: "プロジェクト名を入力してください。",
                                            preferredStyle: .alert)
         controller.addTextField { textField in
-            textField.placeholder = "パスワード"
+            textField.placeholder = "プロジェクト名"
             textField.isSecureTextEntry = false
             textField.keyboardAppearance = .dark
         }
         let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel, handler: nil)
         
-        let buyAction = UIAlertAction(title: "追加する",
+        let addAction = UIAlertAction(title: "追加する",
                                       style: .default) { action in
-            if let projectName = controller.textFields?.first?.text {
-                print(projectName)
-            }
+                                        if let projectName = controller.textFields?.first?.text {
+                                            let project = Project()
+                                            let newTask = Task()
+                                            project.tasks.append(newTask)
+                                            project.project_name = projectName
+                                            self.projects.append(project)
+                                            self.delegate?.appendProject(project:project)
+                                            self.tableView.reloadData()
+                                        }
         }
         controller.addAction(cancelAction)
-        controller.addAction(buyAction)
+        controller.addAction(addAction)
         self.present(controller, animated: true, completion: nil)
     }
 }
@@ -143,11 +154,11 @@ extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {
             return tags.count
         }
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Default", for: indexPath)
         if indexPath.section == 0 {
-            cell.textLabel?.text = projects[indexPath.row]
+            cell.textLabel?.text = projects[indexPath.row].project_name
         }
         else {
             cell.textLabel?.text = tags[indexPath.row]
@@ -158,11 +169,11 @@ extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         delegate?.sidemenuViewController(self, didSelectItemAt: indexPath)
     }
-
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 60
     }
-
+    
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return " ◆ " + sections[section]
     }

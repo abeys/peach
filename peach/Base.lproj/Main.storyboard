@@ -24,7 +24,7 @@
                                     <constraint firstAttribute="height" constant="44" id="Drk-bG-8nL"/>
                                 </constraints>
                                 <items>
-                                    <navigationItem title="Project Name" id="2J2-5f-BhL">
+                                    <navigationItem title="Title" id="2J2-5f-BhL">
                                         <barButtonItem key="leftBarButtonItem" title="Item" image="back" id="U9O-Yh-tCR">
                                             <connections>
                                                 <action selector="tapSidemenu:" destination="BYZ-38-t0r" id="pQ5-f0-i9S"/>
@@ -33,7 +33,7 @@
                                         <rightBarButtonItems>
                                             <barButtonItem title="Item" image="add" id="FrW-Mm-OJR">
                                                 <connections>
-                                                    <action selector="tapAddTask:" destination="BYZ-38-t0r" id="UNi-Lf-woC"/>
+                                                    <segue destination="dDx-vB-i0b" kind="presentation" id="sul-ie-qy3"/>
                                                 </connections>
                                             </barButtonItem>
                                             <barButtonItem title="Item" image="reference" id="sUE-Ra-3Jz"/>
@@ -42,7 +42,7 @@
                                 </items>
                             </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fu6-9N-LQJ">
-                                <rect key="frame" x="0.0" y="64" width="320" height="372"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="taskcell" id="lCS-1j-7QC" customClass="TaskCell" customModule="peach" customModuleProvider="target">
@@ -52,44 +52,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Task Id" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GbN-mZ-xMA">
-                                                    <rect key="frame" x="8" y="1" width="54" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="worked Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bdl-M1-bu8">
-                                                    <rect key="frame" x="164" y="22" width="99" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fpV-EM-W0C">
-                                                    <rect key="frame" x="280" y="11" width="25" height="22"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <state key="normal" title="Button" image="star-white"/>
-                                                    <connections>
-                                                        <action selector="priorityStar:" destination="lCS-1j-7QC" eventType="touchUpInside" id="Pny-N6-4cu"/>
-                                                    </connections>
-                                                </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3jw-C4-CX7">
-                                                    <rect key="frame" x="103" y="23" width="61" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Task Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BP7-2O-oDK">
-                                                    <rect key="frame" x="76" y="-4" width="210" height="31"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Yx-Ac-69X">
-                                                    <rect key="frame" x="44" y="22" width="56" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GbN-mZ-xMA">
+                                                    <rect key="frame" x="7" y="12" width="42" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -98,12 +62,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="date" destination="9Yx-Ac-69X" id="TBZ-LZ-S9f"/>
-                                            <outlet property="star" destination="fpV-EM-W0C" id="cjV-zV-fJL"/>
                                             <outlet property="taskId" destination="GbN-mZ-xMA" id="tqX-ww-VbU"/>
-                                            <outlet property="taskName" destination="BP7-2O-oDK" id="naG-Bg-URV"/>
-                                            <outlet property="time" destination="3jw-C4-CX7" id="v8R-o1-GLq"/>
-                                            <outlet property="workedTime" destination="bdl-M1-bu8" id="OzM-sF-T4Q"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -121,11 +80,11 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <toolbarItems/>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="naviBar" destination="QF5-UR-n9W" id="ggg-WI-4zq"/>
+                        <outlet property="naviItem" destination="2J2-5f-BhL" id="rRG-cw-GDj"/>
                         <outlet property="tableView" destination="fu6-9N-LQJ" id="Py1-mM-Bhh"/>
+                        <outlet property="tableViewTopConstraint" destination="fLE-hx-DIQ" id="BcU-PW-f9d"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -200,6 +159,9 @@
                                 <state key="normal" title="キャンセル">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <segue destination="fAK-Dr-H95" kind="unwind" unwindAction="returnToMainWithSegue:" id="7Bz-Sj-hm2"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yyj-gd-7VS">
                                 <rect key="frame" x="171" y="107" width="105" height="30"/>
@@ -209,6 +171,10 @@
                                 <state key="normal" title="登　録">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="clickRegist:" destination="dDx-vB-i0b" eventType="touchUpInside" id="UPd-xS-K0X"/>
+                                    <segue destination="fAK-Dr-H95" kind="unwind" unwindAction="returnToMainWithSegue:" id="PBH-c8-uiL"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5GD-vZ-jMM">
                                 <rect key="frame" x="287" y="70" width="25" height="24"/>
@@ -224,8 +190,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Esn-Rc-gN6"/>
                     </view>
+                    <connections>
+                        <outlet property="btnRegist" destination="Yyj-gd-7VS" id="iEm-pj-5AB"/>
+                        <outlet property="taskName" destination="5sq-SG-yu7" id="KKW-ho-769"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gLi-r4-13W" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="fAK-Dr-H95" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="870" y="123.75"/>
         </scene>
@@ -233,8 +204,7 @@
     <resources>
         <image name="add" width="24" height="24"/>
         <image name="back" width="24" height="24"/>
-        <image name="calendar" width="18" height="18"/>
+        <image name="calendar" width="24" height="24"/>
         <image name="reference" width="24" height="24"/>
-        <image name="star-white" width="26" height="24"/>
     </resources>
 </document>

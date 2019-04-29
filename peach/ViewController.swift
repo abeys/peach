@@ -14,10 +14,13 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
 //    var data = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
     var data: [Task] = []
     
+    @IBOutlet weak var naviBar: UINavigationBar!
     @IBOutlet weak var tableView: UITableView!
     
     let sidemenuViewController = SideMenuViewController()
     let contentViewController = UINavigationController(rootViewController: UIViewController())
+    
+    var isShowRegistTask: Bool = false
     
     private var isShownSidemenu: Bool {
         return sidemenuViewController.parent == self
@@ -49,10 +52,45 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         data = tasks
     }
 
+    @IBAction func tapAddTask(_ sender: Any) {
+        showRegistTask(animated: true)
+    }
+    
     @IBAction func tapSidemenu(_ sender: Any) {
         showSidemenu(animated: true)
     }
-
+    
+    private func showRegistTask(contentAvailability: Bool = true, animated: Bool) {
+        if isShowRegistTask {
+            return
+        }
+        // ナビゲーションバーの高さを取得する
+        let navHeight = naviBar.frame.size.height + 10
+        // StoryBoardのインスタンスから、RegistTaskViewControllerを取得する
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let registVC = storyboard.instantiateViewController(withIdentifier: "registTask") as! RegistTaskViewController
+        let registView = registVC.view
+        // 表示するRegistTaskの大きさ、位置を計算する
+        var contentRect = registView!.bounds
+        contentRect.size.height = CGFloat(registVC.height)
+        contentRect.origin.y = navHeight - contentRect.height
+        registView!.frame = contentRect
+        registView!.autoresizingMask = .flexibleWidth
+        view.addSubview(registView!)
+        view.sendSubviewToBack(registView!)
+        view.sendSubviewToBack(tableView)
+        
+        // アニメーションで動かす
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseInOut, animations: {
+            registView!.center.y += CGFloat(registVC.height)
+        }, completion: nil)
+        /*
+         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseInOut, animations: {
+         self.tableView!.center.y += CGFloat(registVC.height)
+         }, completion: nil)
+         */
+    }
+    
     private func showSidemenu(contentAvailability: Bool = true, animated: Bool) {
         if isShownSidemenu {
             return
@@ -82,6 +120,13 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         data.remove(at: sourceIndexPath.row)
         data.insert(item, at: destinationIndexPath.row)
     }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let item = data[sourceIndexPath.row]
+        data.remove(at: sourceIndexPath.row)
+        data.insert(item, at: destinationIndexPath.row)
+    }
+
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count

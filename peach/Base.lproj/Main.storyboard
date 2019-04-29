@@ -23,7 +23,11 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Title" id="2J2-5f-BhL">
-                                        <barButtonItem key="leftBarButtonItem" title="Item" image="back" id="U9O-Yh-tCR"/>
+                                        <barButtonItem key="leftBarButtonItem" title="Item" image="back" id="U9O-Yh-tCR">
+                                            <connections>
+                                                <action selector="tapSidemenu:" destination="BYZ-38-t0r" id="pQ5-f0-i9S"/>
+                                            </connections>
+                                        </barButtonItem>
                                         <rightBarButtonItems>
                                             <barButtonItem title="Item" image="add" id="FrW-Mm-OJR"/>
                                             <barButtonItem title="Item" image="reference" id="sUE-Ra-3Jz"/>
@@ -52,6 +56,9 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="taskId" destination="GbN-mZ-xMA" id="tqX-ww-VbU"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>

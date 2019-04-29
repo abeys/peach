@@ -13,8 +13,10 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
 //    var data = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
     var data: [Task] = []
-    
+    var projects:[Project] = []
+
     @IBOutlet weak var naviBar: UINavigationBar!
+    @IBOutlet weak var naviItem: UINavigationItem!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableViewTopConstraint: NSLayoutConstraint!
     
@@ -29,7 +31,27 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        // テスト用データ
+        var taskList:[Task] = []
+        let task1 = Task()
+        task1.project_id=1
+        task1.name="001-タスク１"
+        task1.date="2019-04-01"
+        task1.start_time="00:00"
+        task1.done_flg="0"
+        task1.duration="01:00"
+        task1.rabel="作業"
+        taskList.append(task1)
+        let project1 = Project()
+        project1.project_id = 1
+        project1.project_name="プロジェ１"
+        project1.tasks = taskList
+        projects.append(project1)
+
+        // デフォルトで先頭のプロジェクト名を表示
+        naviItem.title = projects[0].project_name
+
         sidemenuViewController.delegate = self
         tableView.reorder.delegate = self
         // delegateの初期化
@@ -46,7 +68,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             task.done_flg = "0"
             task.duration = "20"
             task.project_id = 1
-            task.project_name = "peach"
+//            task.project_name = "peach"
             task.start_time = "12:00"
             tasks.append(task)
         }
@@ -256,7 +278,21 @@ extension ViewController: SidemenuViewControllerDelegate {
     }
     
     func sidemenuViewController(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath) {
+        naviItem.title = projects[indexPath.row].project_name
         hideSidemenu(animated: true)
     }
+
+    func getProjects() -> [Project] {
+        return projects
+    }
+    
+    func setProjectName(projectName: String){
+        naviItem.title = projectName
+    }
+
+    func appendProject(project: Project){
+        projects.append(project)
+    }
+
 }
 

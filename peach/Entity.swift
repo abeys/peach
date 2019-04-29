@@ -8,10 +8,12 @@
 import Foundation
 
 class Task {
+    // タスクID
+    var task_id : Int!
     // プロジェクトID
-    var project_id : String!
+    var project_id : Int!
     // プロジェクト名
-    var project : String!
+    var project_name : String!
     // タスク名
     var name : String!
     // 開始日
@@ -28,7 +30,7 @@ class Task {
 
 class Project {
     // プロジェクトID
-    var project_id : String!
+    var project_id : Int!
     // タスクオブジェクト
     var tasks : [Task] = []
 }

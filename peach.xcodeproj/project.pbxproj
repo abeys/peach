@@ -10,6 +10,7 @@
 		1DF989AF2276BDFD00FC1579 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DF989AE2276BDFD00FC1579 /* TaskCell.swift */; };
 		1DF989B32276CA2000FC1579 /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DF989B22276CA1700FC1579 /* Entity.swift */; };
 		1DF989B52276CD5600FC1579 /* SideMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DF989B42276CD4700FC1579 /* SideMenuViewController.swift */; };
+		1DF989B72276D8D600FC1579 /* RegistTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DF989B62276D8D600FC1579 /* RegistTaskViewController.swift */; };
 		9D5C89042276B2560071119D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C89032276B2560071119D /* AppDelegate.swift */; };
 		9D5C89062276B2560071119D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C89052276B2560071119D /* ViewController.swift */; };
 		9D5C89092276B2560071119D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D5C89072276B2560071119D /* Main.storyboard */; };
@@ -23,6 +24,7 @@
 		1DF989AE2276BDFD00FC1579 /* TaskCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		1DF989B22276CA1700FC1579 /* Entity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
 		1DF989B42276CD4700FC1579 /* SideMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideMenuViewController.swift; sourceTree = "<group>"; };
+		1DF989B62276D8D600FC1579 /* RegistTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistTaskViewController.swift; sourceTree = "<group>"; };
 		9D5C89002276B2560071119D /* peach.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = peach.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D5C89032276B2560071119D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D5C89052276B2560071119D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 				9D5C89032276B2560071119D /* AppDelegate.swift */,
 				9D5C89052276B2560071119D /* ViewController.swift */,
 				1DF989B42276CD4700FC1579 /* SideMenuViewController.swift */,
+				1DF989B62276D8D600FC1579 /* RegistTaskViewController.swift */,
 				1DF989AE2276BDFD00FC1579 /* TaskCell.swift */,
 				9D5C89072276B2560071119D /* Main.storyboard */,
 				9D5C890A2276B2590071119D /* Assets.xcassets */,
@@ -187,6 +190,7 @@
 				1DF989B52276CD5600FC1579 /* SideMenuViewController.swift in Sources */,
 				9D5C89042276B2560071119D /* AppDelegate.swift in Sources */,
 				9D5C89162276B4AA0071119D /* Entity.swift in Sources */,
+				1DF989B72276D8D600FC1579 /* RegistTaskViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

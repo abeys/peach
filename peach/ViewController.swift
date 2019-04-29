@@ -35,7 +35,6 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         var taskList:[Task] = []
         let task1 = Task()
         task1.project_id=1
-        task1.project_name="プロジェ１"
         task1.name="001-タスク１"
         task1.date="2019-04-01"
         task1.start_time="00:00"
@@ -45,11 +44,12 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         taskList.append(task1)
         let project1 = Project()
         project1.project_id = 1
+        project1.project_name="プロジェ１"
         project1.tasks = taskList
         projects.append(project1)
 
         // デフォルトで先頭のプロジェクト名を表示
-        naviItem.title = projects[0].tasks[0].project_name
+        naviItem.title = projects[0].project_name
 
         sidemenuViewController.delegate = self
         tableView.reorder.delegate = self
@@ -67,7 +67,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             task.done_flg = "0"
             task.duration = "20"
             task.project_id = 1
-            task.project_name = "peach"
+//            task.project_name = "peach"
             task.start_time = "12:00"
             tasks.append(task)
         }
@@ -233,7 +233,7 @@ extension ViewController: SidemenuViewControllerDelegate {
     }
     
     func sidemenuViewController(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath) {
-        naviItem.title = projects[indexPath.row].tasks[0].project_name
+        naviItem.title = projects[indexPath.row].project_name
         hideSidemenu(animated: true)
     }
 

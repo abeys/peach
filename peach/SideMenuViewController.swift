@@ -129,7 +129,7 @@ class SideMenuViewController: UIViewController {
                                             let project = Project()
                                             let newTask = Task()
                                             project.tasks.append(newTask)
-                                            project.tasks[0].project_name = projectName
+                                            project.project_name = projectName
                                             self.projects.append(project)
                                             self.delegate?.appendProject(project:project)
                                             self.tableView.reloadData()
@@ -158,7 +158,7 @@ extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Default", for: indexPath)
         if indexPath.section == 0 {
-            cell.textLabel?.text = projects[indexPath.row].tasks[0].project_name
+            cell.textLabel?.text = projects[indexPath.row].project_name
         }
         else {
             cell.textLabel?.text = tags[indexPath.row]

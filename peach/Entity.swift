@@ -12,8 +12,8 @@ class Task {
     var task_id : Int!
     // プロジェクトID
     var project_id : Int!
-    // プロジェクト名
-    var project_name : String!
+    // 優先フラグ
+    var priority_flg : String!
     // タスク名
     var name : String!
     // 開始日
@@ -31,6 +31,8 @@ class Task {
 class Project {
     // プロジェクトID
     var project_id : Int!
+    // プロジェクト名
+    var project_name : String!
     // タスクオブジェクト
     var tasks : [Task] = []
 }

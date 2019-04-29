@@ -9,11 +9,26 @@
 import UIKit
 import SwiftReorder
 
-class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, TaskCellDelegate {
+    func changePriority(_ index: Int, _ priority: String) {
+        data[index].priority_flg = priority
+//        tableView.reloadData()
+        if data[index].priority_flg == "1" {
+            let item = data[index]
+            data.remove(at: index)
+            data.insert(item, at: 0)
+//            data[index].task_id = 1
+        } else {
+            let item = data[index]
+            data.remove(at: index)
+            data.append(item)
+        }
+        tableView.reloadData()
+    }
+    
     
 //    var data = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
     var data: [Task] = []
-    
     @IBOutlet weak var naviBar: UINavigationBar!
     @IBOutlet weak var tableView: UITableView!
     
@@ -40,12 +55,11 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         for i in 1...10 {
             let task = Task()
             task.task_id = i
-            task.name = "プロジェクト \(i)"
-            task.date = "2019/04/29"
+            task.name = "タスク \(i)"
+            task.date = "04/29"
             task.done_flg = "0"
             task.duration = "20"
             task.project_id = 1
-            task.project_name = "peach"
             task.start_time = "12:00"
             tasks.append(task)
         }
@@ -132,11 +146,28 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         return data.count
     }
     
+    // プロジェクトに紐づくタスク一覧表示制御
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: "taskcell", for: indexPath) as? TaskCell {
-            // TODO 配列の長さに応じたループ回数でないとエラーになる(現状は10回固定)
-            cell.taskId.text = String(data[indexPath.row].task_id)
+            let task = data[indexPath.row]
+            cell.delegate = self
+            let done_flg = data[indexPath.row].done_flg
+            if done_flg == "0" {
+                // TODO 配列の長さに応じたループ回数でないとエラーになる(現状は10回固定)
+                cell.taskId.text = String(task.task_id)
+                cell.date.text = task.date
+                cell.taskName.text = task.name
+                cell.star.tag = indexPath.row
+                if task.priority_flg == "1" {
+                    cell.star.setImage(UIImage(named: "star-yellow"), for: .normal)
+                } else {
+                    cell.star.setImage(UIImage(named: "star-white"), for: .normal)
+                }
+                cell.task = task
+                cell.time.text = data[indexPath.row].start_time
+                cell.workedTime.text = data[indexPath.row].duration
+            }
             return cell
         }
         return UITableViewCell()

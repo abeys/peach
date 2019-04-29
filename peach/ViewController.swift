@@ -95,7 +95,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         })
     }
     
-    func tableView(_ tableView: UITableView, reorderRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let item = data[sourceIndexPath.row]
         data.remove(at: sourceIndexPath.row)
         data.insert(item, at: destinationIndexPath.row)

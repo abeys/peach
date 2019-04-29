@@ -20,6 +20,9 @@ class SideMenuViewController: UIViewController {
     private let contentView = UIView(frame: .zero)
     private let tableView = UITableView(frame: .zero, style: .plain)
     weak var delegate: SidemenuViewControllerDelegate?
+    var sections:[String] = ["プロジェクト"]
+    var projects:[String] = ["WORK","仕事","アプリ開発","PaDia","プライベート"]
+    var tags:[String] = ["task","meeting","休憩"]
 
     private var contentMaxWidth: CGFloat {
         return view.bounds.width * 0.8
@@ -59,6 +62,16 @@ class SideMenuViewController: UIViewController {
         contentView.addSubview(tableView)
         tableView.reloadData()
 
+        let button =  UIButton(frame: CGRect(x: self.view.frame.width-150, y: self.view.frame.height-100, width: self.view.frame.width, height: self.view.frame.height / 4))
+        button.setTitle(" + ", for: UIControl.State.normal)
+        button.setTitleColor(UIColor.white, for: UIControl.State.normal)
+        button.backgroundColor = UIColor.red
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = 14.0
+        button.sizeToFit()
+        button.addTarget(self, action: #selector(addProject(_:)), for: UIControl.Event.touchUpInside)
+        contentView.addSubview(button)
+
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(backgroundTapped(sender:)))
         tapGestureRecognizer.delegate = self
         view.addGestureRecognizer(tapGestureRecognizer)
@@ -94,26 +107,46 @@ class SideMenuViewController: UIViewController {
             completion?(true)
         }
     }
-
+    @objc func addProject(_ sender: UIButton) {
+        print("push button!!!")
+    }
 }
 
 extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return sections.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        if section == 0 {
+            return projects.count
+        }
+        else {
+            return tags.count
+        }
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Default", for: indexPath)
-        cell.textLabel?.text = "Item \(indexPath.row)"
+        if indexPath.section == 0 {
+            cell.textLabel?.text = projects[indexPath.row]
+        }
+        else {
+            cell.textLabel?.text = tags[indexPath.row]
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         delegate?.sidemenuViewController(self, didSelectItemAt: indexPath)
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 60
+    }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return " ◆ " + sections[section]
     }
 }
 

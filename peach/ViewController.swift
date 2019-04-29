@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource {
 
     let sidemenuViewController = SideMenuViewController()
     let contentViewController = UINavigationController(rootViewController: UIViewController())
@@ -81,3 +81,4 @@ extension ViewController: SidemenuViewControllerDelegate {
         hideSidemenu(animated: true)
     }
 }
+

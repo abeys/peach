@@ -12,12 +12,10 @@ import SwiftReorder
 class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, TaskCellDelegate {
     func changePriority(_ index: Int, _ priority: String) {
         data[index].priority_flg = priority
-//        tableView.reloadData()
         if data[index].priority_flg == "1" {
             let item = data[index]
             data.remove(at: index)
             data.insert(item, at: 0)
-//            data[index].task_id = 1
         } else {
             let item = data[index]
             data.remove(at: index)

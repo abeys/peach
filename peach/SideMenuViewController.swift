@@ -108,7 +108,25 @@ class SideMenuViewController: UIViewController {
         }
     }
     @objc func addProject(_ sender: UIButton) {
-        print("push button!!!")
+        let controller = UIAlertController(title: "新規プロジェクトの追加",
+                                           message: "プロジェクト名を入力してください。",
+                                           preferredStyle: .alert)
+        controller.addTextField { textField in
+            textField.placeholder = "パスワード"
+            textField.isSecureTextEntry = false
+            textField.keyboardAppearance = .dark
+        }
+        let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel, handler: nil)
+        
+        let buyAction = UIAlertAction(title: "追加する",
+                                      style: .default) { action in
+            if let projectName = controller.textFields?.first?.text {
+                print(projectName)
+            }
+        }
+        controller.addAction(cancelAction)
+        controller.addAction(buyAction)
+        self.present(controller, animated: true, completion: nil)
     }
 }
 

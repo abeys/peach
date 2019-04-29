@@ -9,6 +9,10 @@
 import UIKit
 
 class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource {
+    
+    var data = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
+
+    @IBOutlet weak var tableView: UITableView!
     let sidemenuViewController = SideMenuViewController()
     let contentViewController = UINavigationController(rootViewController: UIViewController())
     
@@ -28,13 +32,16 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     override func viewDidLoad() {
         super.viewDidLoad()
 
+/*
         contentViewController.viewControllers[0].view.backgroundColor = .white
         contentViewController.viewControllers[0].navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Sidemenu", style: .plain, target: self, action: #selector(sidemenuBarButtonTapped(sender:)))
         addChild(contentViewController)
         view.addSubview(contentViewController.view)
         contentViewController.didMove(toParent: self)
-        
+*/
         sidemenuViewController.delegate = self
+        tableView.delegate = self
+        tableView.dataSource = self
     }
 
     @objc private func sidemenuBarButtonTapped(sender: Any) {
@@ -63,6 +70,45 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             self.sidemenuViewController.removeFromParent()
             self.sidemenuViewController.view.removeFromSuperview()
         })
+    }
+    
+    func tableView(_ tableView: UITableView, reorderRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let item = data[sourceIndexPath.row]
+        data.remove(at: sourceIndexPath.row)
+        data.insert(item, at: destinationIndexPath.row)
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return data.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "taskcell", for: indexPath) as? TaskCell {
+            cell.taskId.text = String(data[indexPath.row])
+            return cell
+        }
+        return UITableViewCell()
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let swipeCellA = UITableViewRowAction(style: .default, title: "編集") { action, index in
+            self.swipeContentsTap(content: "edit", index: index.row)
+        }
+        let swipeCellB = UITableViewRowAction(style: .default, title: "削除") { action, index in
+            self.swipeContentsTap(content: "delete", index: index.row)
+        }
+        swipeCellA.backgroundColor = .blue
+        swipeCellB.backgroundColor = .red
+        return [swipeCellB, swipeCellA]
+    }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func swipeContentsTap(content: String, index: Int) {
+        print("タップされたのは" + index.description + "番のセルで" + "内容は" + content + "でした")
     }
 }
 

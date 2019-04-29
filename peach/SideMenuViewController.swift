@@ -117,7 +117,7 @@ class SideMenuViewController: UIViewController {
                                            message: "プロジェクト名を入力してください。",
                                            preferredStyle: .alert)
         controller.addTextField { textField in
-            textField.placeholder = "パスワード"
+            textField.placeholder = "プロジェクト名"
             textField.isSecureTextEntry = false
             textField.keyboardAppearance = .dark
         }

@@ -14,6 +14,8 @@ protocol SidemenuViewControllerDelegate: class {
     func sidemenuViewControllerDidRequestShowing(_ sidemenuViewController: SideMenuViewController, contentAvailability: Bool, animated: Bool)
     func sidemenuViewControllerDidRequestHiding(_ sidemenuViewController: SideMenuViewController, animated: Bool)
     func sidemenuViewController(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath)
+    func getProjects() -> [Project]
+    func setProjectName(projectName: String)
 }
 
 class SideMenuViewController: UIViewController {
@@ -21,8 +23,8 @@ class SideMenuViewController: UIViewController {
     private let tableView = UITableView(frame: .zero, style: .plain)
     weak var delegate: SidemenuViewControllerDelegate?
     var sections:[String] = ["プロジェクト"]
-    var projects:[String] = ["WORK","仕事","アプリ開発","PaDia","プライベート"]
     var tags:[String] = ["task","meeting","休憩"]
+    var projects:[Project] = []
 
     private var contentMaxWidth: CGFloat {
         return view.bounds.width * 0.8
@@ -53,7 +55,9 @@ class SideMenuViewController: UIViewController {
         contentView.backgroundColor = .white
         contentView.autoresizingMask = .flexibleHeight
         view.addSubview(contentView)
-        
+
+        projects = (delegate?.getProjects())!
+
         tableView.frame = contentView.bounds
         tableView.separatorInset = .zero
         tableView.dataSource = self
@@ -118,14 +122,17 @@ class SideMenuViewController: UIViewController {
         }
         let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel, handler: nil)
         
-        let buyAction = UIAlertAction(title: "追加する",
+        let addAction = UIAlertAction(title: "追加する",
                                       style: .default) { action in
             if let projectName = controller.textFields?.first?.text {
-                print(projectName)
+                let project = Project()
+                project.project_id = projectName
+                self.projects.append(project)
+                self.tableView.reloadData()
             }
         }
         controller.addAction(cancelAction)
-        controller.addAction(buyAction)
+        controller.addAction(addAction)
         self.present(controller, animated: true, completion: nil)
     }
 }
@@ -147,7 +154,7 @@ extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Default", for: indexPath)
         if indexPath.section == 0 {
-            cell.textLabel?.text = projects[indexPath.row]
+            cell.textLabel?.text = projects[indexPath.row].project_id
         }
         else {
             cell.textLabel?.text = tags[indexPath.row]

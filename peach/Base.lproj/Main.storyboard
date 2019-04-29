@@ -33,7 +33,7 @@
                                         <rightBarButtonItems>
                                             <barButtonItem title="Item" image="add" id="FrW-Mm-OJR">
                                                 <connections>
-                                                    <action selector="tapAddTask:" destination="BYZ-38-t0r" id="UNi-Lf-woC"/>
+                                                    <segue destination="dDx-vB-i0b" kind="presentation" id="sul-ie-qy3"/>
                                                 </connections>
                                             </barButtonItem>
                                             <barButtonItem title="Item" image="reference" id="sUE-Ra-3Jz"/>
@@ -83,6 +83,7 @@
                     <connections>
                         <outlet property="naviBar" destination="QF5-UR-n9W" id="ggg-WI-4zq"/>
                         <outlet property="tableView" destination="fu6-9N-LQJ" id="Py1-mM-Bhh"/>
+                        <outlet property="tableViewTopConstraint" destination="fLE-hx-DIQ" id="BcU-PW-f9d"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -157,6 +158,9 @@
                                 <state key="normal" title="キャンセル">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <segue destination="fAK-Dr-H95" kind="unwind" unwindAction="returnToMainWithSegue:" id="7Bz-Sj-hm2"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yyj-gd-7VS">
                                 <rect key="frame" x="171" y="107" width="105" height="30"/>
@@ -166,6 +170,9 @@
                                 <state key="normal" title="登　録">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="clickRegist:" destination="dDx-vB-i0b" eventType="touchUpInside" id="UPd-xS-K0X"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5GD-vZ-jMM">
                                 <rect key="frame" x="287" y="70" width="25" height="24"/>
@@ -181,8 +188,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Esn-Rc-gN6"/>
                     </view>
+                    <connections>
+                        <outlet property="btnRegist" destination="Yyj-gd-7VS" id="iEm-pj-5AB"/>
+                        <outlet property="taskName" destination="5sq-SG-yu7" id="KKW-ho-769"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gLi-r4-13W" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="fAK-Dr-H95" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="870" y="123.75"/>
         </scene>

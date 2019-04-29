@@ -9,13 +9,14 @@
 import UIKit
 import SwiftReorder
 
-class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, RegistTaskViewControllerDelegate {
     
 //    var data = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
     var data: [Task] = []
     
     @IBOutlet weak var naviBar: UINavigationBar!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableViewTopConstraint: NSLayoutConstraint!
     
     let sidemenuViewController = SideMenuViewController()
     let contentViewController = UINavigationController(rootViewController: UIViewController())
@@ -37,7 +38,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         // セルの初期化
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         var tasks : [Task] = []
-        for i in 1...10 {
+        for i in 1...20 {
             let task = Task()
             task.task_id = i
             task.name = "プロジェクト \(i)"
@@ -52,24 +53,43 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         data = tasks
     }
 
+    @IBAction func returnToMain(segue: UIStoryboardSegue) { }
+    /*
     @IBAction func tapAddTask(_ sender: Any) {
         showRegistTask(animated: true)
     }
+    */
     
     @IBAction func tapSidemenu(_ sender: Any) {
         showSidemenu(animated: true)
+    }
+    
+    func didRegistTask(index:Int, task: Task) {
+        print("task added.")
+    }
+    
+    func didCancelRegistTask() {
+        print("cancel")
+        hideRegistTask(animated: true)
+    }
+    
+    @IBAction func clickRegistTaskCancel(_ sender: Any) {
+        print("cancel...")
+        hideRegistTask(animated: true)
     }
     
     private func showRegistTask(contentAvailability: Bool = true, animated: Bool) {
         if isShowRegistTask {
             return
         }
+        isShowRegistTask = true
         // ナビゲーションバーの高さを取得する
         let navHeight = naviBar.frame.size.height + 10
         // StoryBoardのインスタンスから、RegistTaskViewControllerを取得する
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let registVC = storyboard.instantiateViewController(withIdentifier: "registTask") as! RegistTaskViewController
         let registView = registVC.view
+        registVC.delegate = self
         // 表示するRegistTaskの大きさ、位置を計算する
         var contentRect = registView!.bounds
         contentRect.size.height = CGFloat(registVC.height)
@@ -81,14 +101,39 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         view.sendSubviewToBack(tableView)
         
         // アニメーションで動かす
-        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseInOut, animations: {
+        UIView.animate(withDuration: registVC.duration, delay: 0.0, options: .curveEaseInOut, animations: {
             registView!.center.y += CGFloat(registVC.height)
         }, completion: nil)
-        /*
-         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseInOut, animations: {
-         self.tableView!.center.y += CGFloat(registVC.height)
-         }, completion: nil)
-         */
+        // TableViewは制約が貼ってあるので、制約を変更する
+        view.setNeedsUpdateConstraints()
+        tableViewTopConstraint.constant += CGFloat(registVC.height)
+        UIView.animate(withDuration: registVC.duration, delay: 0.0, options: .curveEaseInOut, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
+    private func hideRegistTask(animated: Bool) {
+        if !isShowRegistTask {
+            return
+        }
+        // StoryBoardのインスタンスから、RegistTaskViewControllerを取得する
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let registVC = storyboard.instantiateViewController(withIdentifier: "registTask") as! RegistTaskViewController
+        let registView = registVC.view
+        registVC.delegate = self
+        // アニメーションで隠してから
+        UIView.animate(withDuration: registVC.duration, delay: 0.0, options: .curveEaseInOut, animations: {
+            registView!.center.y -= CGFloat(registVC.height)
+        }, completion: {(fin) in
+            registView?.removeFromSuperview()
+        })
+        // TableViewは制約が貼ってあるので、制約を変更する
+        view.setNeedsUpdateConstraints()
+        tableViewTopConstraint.constant -= CGFloat(registVC.height)
+        UIView.animate(withDuration: registVC.duration, delay: 0.0, options: .curveEaseInOut, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+        
     }
     
     private func showSidemenu(contentAvailability: Bool = true, animated: Bool) {

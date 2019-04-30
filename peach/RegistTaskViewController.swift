@@ -65,6 +65,10 @@ class RegistTaskViewController : UIViewController,UITextFieldDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        taskName.text = task?.name
+        duedate.text = task?.date
+        starttime.text = task?.start_time
+        span.text = task?.duration
         redraw()
     }
     
@@ -78,10 +82,6 @@ class RegistTaskViewController : UIViewController,UITextFieldDelegate {
             btnRegist.isEnabled = false
             btnRegist.backgroundColor = UIColor.lightGray
         }
-        taskName.text = task?.name
-        duedate.text = task?.date
-        starttime.text = task?.start_time
-        span.text = task?.duration
     }
     
     func generateSelection() {
@@ -128,7 +128,6 @@ class RegistTaskViewController : UIViewController,UITextFieldDelegate {
             return
         }
         if textView.text != nil {
-            task!.name = textView.text
             redraw()
         }
     }
@@ -150,12 +149,10 @@ extension RegistTaskViewController: PickerViewKeyboardDelegate {
         return durationSelect
     }
     func didDone(sender: PickerViewKeyboard, selectedData: [Int]) {
-        print("\(sender.pickerView.selectedRow(inComponent: 0))")
-        task?.date = dateSelect[selectedData[0]]
-        task?.start_time = timeSelect[selectedData[1]]
-        task?.duration = durationSelect[selectedData[2]]
+        duedate.text = dateSelect[selectedData[0]]
+        starttime.text = timeSelect[selectedData[1]]
+        span.text = durationSelect[selectedData[2]]
         self.btnChange.resignFirstResponder()
-        redraw()
     }
     func didCancel(sender: PickerViewKeyboard) {
         self.btnChange.resignFirstResponder()

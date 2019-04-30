@@ -284,13 +284,10 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     }
     
     func swipeContentsTap(content: String, index: Int) {
-        //print("タップされたのは" + index.description + "番のセルで" + "内容は" + content + "でした")
         switch content {
         case "edit":
-            print("xxxx")
             showRegistTask(animated: true, index: index)
         case "delete":
-            print("yyyy")
             data.remove(at: index)
             tableView.reloadData()
         default:

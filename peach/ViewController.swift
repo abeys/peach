@@ -9,30 +9,18 @@
 import UIKit
 import SwiftReorder
 
-class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, TaskCellDelegate {
-    func changePriority(_ index: Int, _ priority: String) {
-        data[index].priority_flg = priority
-        if data[index].priority_flg == "1" {
-            let item = data[index]
-            data.remove(at: index)
-            data.insert(item, at: 0)
-        } else {
-            let item = data[index]
-            data.remove(at: index)
-            data.append(item)
-        }
-        tableView.reloadData()
-    }
-    
-    
-//    var data = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
-    var data: [Task] = []
+class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, TaskCellDelegate, RegistTaskViewControllerDelegate {
+    // プロジェクトデータ
     var projects:[Project] = []
-
+    // 選択されているプロジェクトのタスク（完了表示画面では 完了したタスク）
+    var data: [Task] = []
+    
     @IBOutlet weak var naviBar: UINavigationBar!
     @IBOutlet weak var naviItem: UINavigationItem!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableViewTopConstraint: NSLayoutConstraint!
+    
+    var registVC:RegistTaskViewController? = nil
     
     let sidemenuViewController = SideMenuViewController()
     let contentViewController = UINavigationController(rootViewController: UIViewController())
@@ -45,6 +33,12 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // 登録用画面の初期化
+        // StoryBoardのインスタンスから、RegistTaskViewControllerを取得する
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        registVC = storyboard.instantiateViewController(withIdentifier: "registTask") as? RegistTaskViewController
+        registVC!.delegate = self
 
         // テスト用データ
         var taskList:[Task] = []
@@ -74,83 +68,112 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         // セルの初期化
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         var tasks : [Task] = []
-        for i in 1...20 {
+        for i in 1...5 {
             let task = Task()
             task.task_id = i
             task.name = "タスク \(i)"
             task.date = "04/29"
+            task.priority_flg = "0"
             task.done_flg = "0"
             task.duration = "20"
             task.project_id = 1
-//            task.project_name = "peach"
             task.start_time = "12:00"
             tasks.append(task)
         }
         data = tasks
     }
-
-    @IBAction func returnToMain(segue: UIStoryboardSegue) { }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let registVC = segue.destination as! RegistTaskViewController
-        registVC.delegate = self as! RegistTaskViewControllerDelegate
-    }
-    /*
-    @IBAction func tapAddTask(_ sender: Any) {
-        showRegistTask(animated: true)
-    }
-    */
     
+    // タスク追加実行
+    @IBAction func tapAddTask(_ sender: Any) {
+        showRegistTask(animated: true, index: -1)
+    }
+    
+    // サイドメニュー
     @IBAction func tapSidemenu(_ sender: Any) {
         showSidemenu(animated: true)
     }
     
     func didRegistTask(index:Int, task: Task) {
-        print("task added.")
         if index == -1 {
             data.append(task)
         }
+        else {
+            data.remove(at: index)
+            data.insert(task, at: index)
+        }
+        tableView.reloadData()
+        hideRegistTask(animated: true)
     }
     
     func didCancelRegistTask() {
-        print("cancel")
         hideRegistTask(animated: true)
     }
     
-    @IBAction func clickRegistTaskCancel(_ sender: Any) {
-        print("cancel...")
-        hideRegistTask(animated: true)
-    }
-    
-    private func showRegistTask(contentAvailability: Bool = true, animated: Bool) {
+    private func showRegistTask(contentAvailability: Bool = true, animated: Bool, index: Int) {
         if isShowRegistTask {
             return
         }
         isShowRegistTask = true
+        // 新規登録、編集するタスクを準備する
+        registVC!.index = index
+        if index>=0 {
+            registVC!.task = data[index]
+        }
+        else {
+            // 新規追加するタスクの初期値をセットする
+            let now = Date()
+            let dtFormatter = DateFormatter()
+            dtFormatter.dateFormat = "MM/dd"
+            let cal = Calendar.current
+            var hour = cal.component(.hour, from: now)
+            var min  = cal.component(.minute, from: now)
+            // 開始時間の調整
+            if min > 30 {
+                // 30分以降は、次の時間の正時に
+                hour += 1
+                min = 0
+            }
+            else {
+                // そうでなければ、30分に
+                min = 30
+            }
+            
+            let task = Task()
+            task.name = ""
+            task.date = dtFormatter.string(from: Date())
+            task.start_time = "\(hour):" + String(format:"%02d",min)
+            task.duration = "0.5"
+            task.task_id = 0 //TODO:idの振り方
+            task.done_flg = "0"
+            task.priority_flg = "0"
+            registVC!.task = task
+        }
         // ナビゲーションバーの高さを取得する
-        let navHeight = naviBar.frame.size.height + 10
-        // StoryBoardのインスタンスから、RegistTaskViewControllerを取得する
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let registVC = storyboard.instantiateViewController(withIdentifier: "registTask") as! RegistTaskViewController
-        let registView = registVC.view
-        registVC.delegate = self as! RegistTaskViewControllerDelegate
+        let navHeight = naviBar.frame.size.height + UIApplication.shared.statusBarFrame.size.height
+        
         // 表示するRegistTaskの大きさ、位置を計算する
-        var contentRect = registView!.bounds
-        contentRect.size.height = CGFloat(registVC.height)
+        var contentRect = registVC!.view!.bounds
+        contentRect.size.height = CGFloat(registVC!.height)
         contentRect.origin.y = navHeight - contentRect.height
-        registView!.frame = contentRect
-        registView!.autoresizingMask = .flexibleWidth
-        view.addSubview(registView!)
-        view.sendSubviewToBack(registView!)
-        view.sendSubviewToBack(tableView)
+        registVC!.view!.frame = contentRect
+        registVC!.view!.autoresizingMask = .flexibleWidth
+        
+        addChild(registVC!)
+        view.insertSubview(registVC!.view, aboveSubview: contentViewController.view)
+        //naviBar.bringSubviewToFront(registVC!.view)
+        registVC!.view.alpha = -0.5
+        registVC!.didMove(toParent: self)
         
         // アニメーションで動かす
-        UIView.animate(withDuration: registVC.duration, delay: 0.0, options: .curveEaseInOut, animations: {
-            registView!.center.y += CGFloat(registVC.height)
+        UIView.animate(withDuration: registVC!.duration, delay: 0.0, options: .curveEaseInOut, animations: {
+            self.registVC!.view.center.y += CGFloat(self.registVC!.height)
+            self.registVC!.view.alpha = 1.0
         }, completion: nil)
+        
         // TableViewは制約が貼ってあるので、制約を変更する
         view.setNeedsUpdateConstraints()
-        tableViewTopConstraint.constant += CGFloat(registVC.height)
-        UIView.animate(withDuration: registVC.duration, delay: 0.0, options: .curveEaseInOut, animations: {
+        tableViewTopConstraint.constant += CGFloat(registVC!.height)
+        UIView.animate(withDuration: registVC!.duration, delay: 0.0, options: .curveEaseInOut, animations: {
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
@@ -159,24 +182,23 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         if !isShowRegistTask {
             return
         }
-        // StoryBoardのインスタンスから、RegistTaskViewControllerを取得する
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let registVC = storyboard.instantiateViewController(withIdentifier: "registTask") as! RegistTaskViewController
-        let registView = registVC.view
-        registVC.delegate = self as! RegistTaskViewControllerDelegate
+        isShowRegistTask = false
         // アニメーションで隠してから
-        UIView.animate(withDuration: registVC.duration, delay: 0.0, options: .curveEaseInOut, animations: {
-            registView!.center.y -= CGFloat(registVC.height)
+        UIView.animate(withDuration: registVC!.duration, delay: 0.0, options: .curveEaseInOut, animations: {
+            self.registVC!.view.center.y -= CGFloat(self.registVC!.height)
+            self.registVC!.view.alpha = -0.5
         }, completion: {(fin) in
-            registView?.removeFromSuperview()
+            //registView?.removeFromSuperview()
+            self.registVC!.willMove(toParent: nil)
+            self.registVC!.removeFromParent()
+            self.registVC!.view.removeFromSuperview()
         })
         // TableViewは制約が貼ってあるので、制約を変更する
         view.setNeedsUpdateConstraints()
-        tableViewTopConstraint.constant -= CGFloat(registVC.height)
-        UIView.animate(withDuration: registVC.duration, delay: 0.0, options: .curveEaseInOut, animations: {
+        tableViewTopConstraint.constant -= CGFloat(registVC!.height)
+        UIView.animate(withDuration: registVC!.duration, delay: 0.0, options: .curveEaseInOut, animations: {
             self.view.layoutIfNeeded()
         }, completion: nil)
-        
     }
     
     private func showSidemenu(contentAvailability: Bool = true, animated: Bool) {
@@ -202,27 +224,21 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             self.sidemenuViewController.view.removeFromSuperview()
         })
     }
-    
-    func tableView1(_ tableView: UITableView, reorderRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let item = data[sourceIndexPath.row]
-        data.remove(at: sourceIndexPath.row)
-        data.insert(item, at: destinationIndexPath.row)
-    }
-    
+
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let item = data[sourceIndexPath.row]
         data.remove(at: sourceIndexPath.row)
         data.insert(item, at: destinationIndexPath.row)
     }
-
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }
-    
     // プロジェクトに紐づくタスク一覧表示制御
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+        if let spacer = tableView.reorder.spacerCell(for: indexPath) {
+            return spacer
+        }
         if let cell = tableView.dequeueReusableCell(withIdentifier: "taskcell", for: indexPath) as? TaskCell {
             let task = data[indexPath.row]
             cell.delegate = self
@@ -262,27 +278,38 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-    
-    func swipeContentsTap(content: String, index: Int) {
-        print("タップされたのは" + index.description + "番のセルで" + "内容は" + content + "でした")
-    }
-    
-    func tableView5(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
-    }
-    
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView6(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // ドラッグされているセルを返す
-        if let spacer = tableView.reorder.spacerCell(for: indexPath) {
-            return spacer
+    func swipeContentsTap(content: String, index: Int) {
+        //print("タップされたのは" + index.description + "番のセルで" + "内容は" + content + "でした")
+        switch content {
+        case "edit":
+            print("xxxx")
+            showRegistTask(animated: true, index: index)
+        case "delete":
+            print("yyyy")
+            data.remove(at: index)
+            tableView.reloadData()
+        default:
+            print("zzzz")
         }
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = String(data[indexPath.row].task_id)
-        return cell
+    }
+    
+    func changePriority(_ index: Int, _ priority: String) {
+        data[index].priority_flg = priority
+        if data[index].priority_flg == "1" {
+            let item = data[index]
+            data.remove(at: index)
+            data.insert(item, at: 0)
+        } else {
+            let item = data[index]
+            data.remove(at: index)
+            data.append(item)
+        }
+        tableView.reloadData()
     }
 }
 
@@ -331,6 +358,5 @@ extension ViewController: SidemenuViewControllerDelegate {
     func appendProject(project: Project){
         projects.append(project)
     }
-
 }
 

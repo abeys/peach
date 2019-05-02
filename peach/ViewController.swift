@@ -10,6 +10,8 @@ import UIKit
 import SwiftReorder
 
 class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, TaskCellDelegate, RegistTaskViewControllerDelegate {
+    // 表示中のプロジェクトindex
+    var projectIndex = 0
     // プロジェクトデータ
     var projects:[Project] = []
     // 選択されているプロジェクトのタスク（完了表示画面では 完了したタスク）
@@ -25,7 +27,9 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     let sidemenuViewController = SideMenuViewController()
     let contentViewController = UINavigationController(rootViewController: UIViewController())
     
-    var isShowRegistTask: Bool = false
+    var isShowRegistTask: Bool {
+        return registVC?.parent == self
+    }
     
     private var isShownSidemenu: Bool {
         return sidemenuViewController.parent == self
@@ -41,20 +45,10 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         registVC!.delegate = self
 
         // テスト用データ
-        var taskList:[Task] = []
-        let task1 = Task()
-        task1.project_id=1
-        task1.name="001-タスク１"
-        task1.date="2019-04-01"
-        task1.start_time="00:00"
-        task1.done_flg="0"
-        task1.duration="01:00"
-        task1.rabel="作業"
-        taskList.append(task1)
         let project1 = Project()
         project1.project_id = 1
         project1.project_name="プロジェ１"
-        project1.tasks = taskList
+        project1.tasks = []
         projects.append(project1)
 
         // デフォルトで先頭のプロジェクト名を表示
@@ -72,13 +66,14 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             let task = Task()
             task.task_id = i
             task.name = "タスク \(i)"
-            task.date = "04/29"
+            task.date = "05/03"
             task.priority_flg = "0"
             task.done_flg = "0"
-            task.duration = "20"
+            task.duration = "1"
             task.project_id = 1
-            task.start_time = "12:00"
+            task.start_time = "\(8+i):00"
             tasks.append(task)
+            projects[0].tasks.append(task)
         }
         data = tasks
     }
@@ -93,27 +88,35 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         showSidemenu(animated: true)
     }
     
+    // 登録画面で「done」を押した際に実行される
     func didRegistTask(index:Int, task: Task) {
         if index == -1 {
             data.append(task)
+            projects[projectIndex].tasks.append(task)
         }
         else {
             data.remove(at: index)
             data.insert(task, at: index)
+            var tasks = projects[projectIndex].tasks
+            tasks.remove(at: index)
+            tasks.insert(task, at: index)
         }
         tableView.reloadData()
         hideRegistTask(animated: true)
     }
     
+    // 登録画面で[cancel」を押した際に実行される
+    // 登録画面を非表示にするのみ
     func didCancelRegistTask() {
         hideRegistTask(animated: true)
     }
     
+    // 登録画面を表示する
     private func showRegistTask(contentAvailability: Bool = true, animated: Bool, index: Int) {
         if isShowRegistTask {
             return
         }
-        isShowRegistTask = true
+        //isShowRegistTask = true
         // 新規登録、編集するタスクを準備する
         registVC!.index = index
         if index>=0 {
@@ -182,7 +185,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         if !isShowRegistTask {
             return
         }
-        isShowRegistTask = false
+        //isShowRegistTask = false
         // アニメーションで隠してから
         UIView.animate(withDuration: registVC!.duration, delay: 0.0, options: .curveEaseInOut, animations: {
             self.registVC!.view.center.y -= CGFloat(self.registVC!.height)
@@ -227,8 +230,14 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
 
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let item = data[sourceIndexPath.row]
+        let dest = data[destinationIndexPath.row]
         data.remove(at: sourceIndexPath.row)
         data.insert(item, at: destinationIndexPath.row)
+        // projects.tasks 内の順番の入れ替え
+        let srcIndex = projects[projectIndex].tasks.firstIndex(where: {task in return task.name == item.name })
+        let desIndex = projects[projectIndex].tasks.firstIndex(where: {task in return task.name == dest.name })
+        projects[projectIndex].tasks.remove(at: srcIndex!)
+        projects[projectIndex].tasks.insert(item, at: desIndex!)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -282,7 +291,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-    
+    // スワイプコマンド（編集、削除）実行時に呼ばれる
     func swipeContentsTap(content: String, index: Int) {
         switch content {
         case "edit":
@@ -294,7 +303,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             print("zzzz")
         }
     }
-    
+    // 星（優先度）をタップされた際に実行される
     func changePriority(_ index: Int, _ priority: String) {
         data[index].priority_flg = priority
         if data[index].priority_flg == "1" {
@@ -338,10 +347,20 @@ extension ViewController: SidemenuViewControllerDelegate {
     func sidemenuViewControllerDidRequestHiding(_ sidemenuViewController: SideMenuViewController, animated: Bool) {
         hideSidemenu(animated: animated)
     }
-    
+    // サイドメニューでプロジェクトを選択した際に呼ばれる
     func sidemenuViewController(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath) {
         naviItem.title = projects[indexPath.row].project_name
         hideSidemenu(animated: true)
+        
+        projectIndex = indexPath.row
+        data = []
+        for task in projects[projectIndex].tasks {
+            // TODO:画面の表示モードによって切り替えるべき
+            if task.done_flg == "0" {
+                data.append(task)
+            }
+        }
+        tableView.reloadData()
     }
 
     func getProjects() -> [Project] {

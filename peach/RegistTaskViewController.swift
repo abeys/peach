@@ -14,7 +14,7 @@ protocol RegistTaskViewControllerDelegate: class {
     func didCancelRegistTask()
 }
 
-class RegistTaskViewController : UIViewController,UITextFieldDelegate {
+class RegistTaskViewController : UIViewController {
     
     var index:Int?
     var task:Task?
@@ -41,7 +41,6 @@ class RegistTaskViewController : UIViewController,UITextFieldDelegate {
         super.viewDidLoad()
         btnChange.delegate = self
         btnCancel.backgroundColor = UIColor.orange
-        taskName.delegate = self
         
         duedate.textColor = UIColor.gray
         duedate.backgroundColor = UIColor.white
@@ -171,6 +170,8 @@ protocol PickerViewKeyboardDelegate {
 class PickerViewKeyboard: UIButton {
     var delegate: PickerViewKeyboardDelegate!
     var pickerView: UIPickerView!
+    // なんだがpickerViewが正しいselectedを返却しないので、イベントでがんばるwww
+    var selval:[Int]=[]
     
     override var canBecomeFirstResponder: Bool {
         return true
@@ -205,7 +206,7 @@ class PickerViewKeyboard: UIButton {
         pickerView.selectRow(initrow[0], inComponent: 0, animated: false)
         pickerView.selectRow(initrow[1], inComponent: 1, animated: false)
         pickerView.selectRow(initrow[2], inComponent: 2, animated: false)
-        
+        selval = initrow
         return pickerView
     }
     
@@ -226,15 +227,16 @@ class PickerViewKeyboard: UIButton {
         return toolbar
     }
     
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        selval[component] = row
+    }
+    
     @objc func cancelPicker() {
         delegate.didCancel(sender: self)
     }
     
     @objc func donePicker() {
-        delegate.didDone(sender: self, selectedData: [pickerView.selectedRow(inComponent: 0),
-            pickerView.selectedRow(inComponent: 1),
-            pickerView.selectedRow(inComponent: 2)]
-        )
+        delegate.didDone(sender: self, selectedData: [selval[0],selval[1],selval[2]])
     }
 }
 
@@ -254,7 +256,6 @@ extension PickerViewKeyboard : UIPickerViewDelegate, UIPickerViewDataSource {
             return 0
         }
     }
-    
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         switch component {
         case 0:

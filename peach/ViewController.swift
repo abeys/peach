@@ -93,6 +93,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         if index == -1 {
             data.append(task)
             projects[projectIndex].tasks.append(task)
+            tableView.insertRows(at: [IndexPath(row: data.count-1, section: 0)], with: .automatic)
         }
         else {
             data.remove(at: index)
@@ -100,8 +101,8 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             var tasks = projects[projectIndex].tasks
             tasks.remove(at: index)
             tasks.insert(task, at: index)
+            tableView.reloadData()
         }
-        tableView.reloadData()
         hideRegistTask(animated: true)
     }
     
@@ -298,7 +299,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             showRegistTask(animated: true, index: index)
         case "delete":
             data.remove(at: index)
-            tableView.reloadData()
+            tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         default:
             print("zzzz")
         }

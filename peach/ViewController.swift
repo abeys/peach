@@ -46,7 +46,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
 
         // テスト用データ
         let project1 = Project()
-        project1.project_id = 1
+        project1.project_id = 0
         project1.project_name="プロジェ１"
         project1.tasks = []
         projects.append(project1)
@@ -62,15 +62,15 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         // セルの初期化
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         var tasks : [Task] = []
-        for i in 1...5 {
+        for i in 1...20 {
             let task = Task()
             task.task_id = i
             task.name = "タスク \(i)"
             task.date = "05/03"
             task.priority_flg = "0"
             task.done_flg = "0"
-            task.duration = "1"
-            task.project_id = 1
+            task.duration = "1.0"
+            task.project_id = 0
             task.start_time = "\(8+i):00"
             tasks.append(task)
             projects[0].tasks.append(task)
@@ -96,12 +96,23 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             tableView.insertRows(at: [IndexPath(row: data.count-1, section: 0)], with: .automatic)
         }
         else {
-            data.remove(at: index)
-            data.insert(task, at: index)
-            var tasks = projects[projectIndex].tasks
-            tasks.remove(at: index)
-            tasks.insert(task, at: index)
-            tableView.reloadData()
+            // 編集開始のプロジェクトと現在のプロジェクトが異なる場合
+            if (task.project_id != projectIndex) {
+                // 元のプロジェクトからタスクを削除
+                projects[task.project_id].tasks.remove(at: index)
+                // 現在のプロジェクトの末尾に追加
+                data.append(task)
+                projects[projectIndex].tasks.append(task)
+                tableView.insertRows(at: [IndexPath(row: data.count-1, section: 0)], with: .automatic)
+            }
+            else {
+                data.remove(at: index)
+                data.insert(task, at: index)
+                var tasks = projects[projectIndex].tasks
+                tasks.remove(at: index)
+                tasks.insert(task, at: index)
+                tableView.reloadData()
+            }
         }
         hideRegistTask(animated: true)
     }
@@ -150,6 +161,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             task.task_id = 0 //TODO:idの振り方
             task.done_flg = "0"
             task.priority_flg = "0"
+            task.project_id = projectIndex
             registVC!.task = task
         }
         // ナビゲーションバーの高さを取得する
@@ -192,7 +204,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             self.registVC!.view.center.y -= CGFloat(self.registVC!.height)
             self.registVC!.view.alpha = -0.5
         }, completion: {(fin) in
-            //registView?.removeFromSuperview()
+            // アニメーション完了後に表示を消す
             self.registVC!.willMove(toParent: nil)
             self.registVC!.removeFromParent()
             self.registVC!.view.removeFromSuperview()
@@ -229,6 +241,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         })
     }
 
+    // タスクの順番変更
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let item = data[sourceIndexPath.row]
         let dest = data[destinationIndexPath.row]
@@ -307,16 +320,24 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     // 星（優先度）をタップされた際に実行される
     func changePriority(_ index: Int, _ priority: String) {
         data[index].priority_flg = priority
+        var toIndex = data.count-1
         if data[index].priority_flg == "1" {
             let item = data[index]
             data.remove(at: index)
             data.insert(item, at: 0)
+            toIndex = 0
         } else {
             let item = data[index]
             data.remove(at: index)
             data.append(item)
         }
-        tableView.reloadData()
+        UIView.animate(withDuration: 0.5, animations: {
+            self.tableView.beginUpdates()
+            self.tableView.moveRow(at: IndexPath(row: index, section: 0), to: IndexPath(row: toIndex, section: 0))
+            self.tableView.endUpdates()
+        }, completion: {finish in
+            self.tableView.reloadRows(at: [IndexPath(row: toIndex, section: 0)], with: .automatic)
+        })
     }
 }
 

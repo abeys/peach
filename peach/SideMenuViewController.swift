@@ -127,9 +127,10 @@ class SideMenuViewController: UIViewController {
                                       style: .default) { action in
                                         if let projectName = controller.textFields?.first?.text {
                                             let project = Project()
-                                            let newTask = Task()
-                                            project.tasks.append(newTask)
+                                            //let newTask = Task()
+                                            project.tasks = []
                                             project.project_name = projectName
+                                            project.project_id = self.projects.count
                                             self.projects.append(project)
                                             self.delegate?.appendProject(project:project)
                                             self.tableView.reloadData()

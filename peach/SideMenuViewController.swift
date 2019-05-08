@@ -67,13 +67,16 @@ class SideMenuViewController: UIViewController {
         contentView.addSubview(tableView)
         tableView.reloadData()
         
-        let button =  UIButton(frame: CGRect(x: self.view.frame.width-150, y: self.view.frame.height-100, width: self.view.frame.width, height: self.view.frame.height / 4))
-        button.setTitle(" + ", for: UIControl.State.normal)
+//        let button =  UIButton(frame: CGRect(x: self.view.frame.width-150, y: self.view.frame.height-100, width: self.view.frame.width, height: self.view.frame.height / 4))
+        let button =  UIButton(frame: CGRect(x: self.view.frame.width-200, y: self.view.frame.height-150, width: 70, height: 70))
+        button.setTitle("+", for: UIControl.State.normal)
         button.setTitleColor(UIColor.white, for: UIControl.State.normal)
-        button.backgroundColor = UIColor.red
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 48)
+        button.backgroundColor = UIColor(red: 0/255, green: 184/255, blue: 0/255, alpha: 1)
         button.layer.masksToBounds = true
-        button.layer.cornerRadius = 14.0
-        button.sizeToFit()
+        button.layer.cornerRadius = 35
+        button.titleEdgeInsets = UIEdgeInsets(top: 0,left: 0,bottom: 5,right: 0)
+//        button.sizeToFit()
         button.addTarget(self, action: #selector(addProject(_:)), for: UIControl.Event.touchUpInside)
         contentView.addSubview(button)
         

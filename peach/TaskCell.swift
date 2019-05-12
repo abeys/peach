@@ -24,7 +24,7 @@ class TaskCell : UITableViewCell {
     //開始予定時間ラベル
     @IBOutlet weak var time: UILabel!
     // 作業時間
-    @IBOutlet weak var workedTime: UILabel!
+    @IBOutlet weak var estimatedTime: UILabel!
     // 優先アイコン
     @IBOutlet weak var star: UIButton!
     // 優先アイコンアクション
@@ -36,6 +36,15 @@ class TaskCell : UITableViewCell {
             delegate?.changePriority(button.tag, "0")
         }
     }
+    // ラベル
+    @IBOutlet weak var label: UILabel!
+    // 経過・実績時間
+    @IBOutlet weak var workedTime: UILabel!
+    // タイマー制御
+    @IBAction func timerPlayer(_ sender: Any) {
+    }
+    // タスク完了制御
+    @IBAction func doneExec(_ sender: Any) {
     
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
@@ -47,3 +56,4 @@ class TaskCell : UITableViewCell {
         }
     }
 }
+

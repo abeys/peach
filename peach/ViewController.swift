@@ -63,7 +63,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     private var isShownSidemenu: Bool {
         return sidemenuViewController.parent == self
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewController did load.")
@@ -100,9 +100,11 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 task.task_id = i
                 task.name = "タスク \(i)"
                 task.date = "05/12"
+                task.estimated_time = "3h"
                 task.priority_flg = "0"
                 task.done_flg = "0"
-                task.duration = "1.0"
+                task.duration = "00:00"
+                task.label = "MTG"
                 task.project_id = 0
                 task.start_time = "\(8+i):00"
                 tasks.append(task)
@@ -213,6 +215,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             task.name = ""
             task.date = dtFormatter.string(from: Date())
             task.start_time = "\(hour):" + String(format:"%02d",min)
+            task.estimated_time = "3.0h"
             task.duration = "0.5"
             task.task_id = 0 //TODO:idの振り方
             task.done_flg = "0"
@@ -290,7 +293,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             sidemenuViewController.showContentView(animated: animated)
         }
     }
-
+    
     private func hideSidemenu(animated: Bool) {
         if !isShownSidemenu { return }
         
@@ -300,7 +303,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             self.sidemenuViewController.view.removeFromSuperview()
         })
     }
-
+    
     // タスクの順番変更
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let item = data[sourceIndexPath.row]
@@ -328,18 +331,20 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             let done_flg = data[indexPath.row].done_flg
             if done_flg == "0" {
                 // TODO 配列の長さに応じたループ回数でないとエラーになる(現状は10回固定)
-                cell.taskId.text = String(task.task_id)
                 cell.date.text = task.date
                 cell.taskName.text = task.name
                 cell.star.tag = indexPath.row
                 if task.priority_flg == "1" {
-                    cell.star.setImage(UIImage(named: "star-yellow"), for: .normal)
+                    cell.star.setImage(UIImage(named: "star02"), for: .normal)
                 } else {
-                    cell.star.setImage(UIImage(named: "star-white"), for: .normal)
+                    cell.star.setImage(UIImage(named: "star01"), for: .normal)
                 }
                 cell.task = task
-                cell.time.text = data[indexPath.row].start_time
+                cell.date.text = data[indexPath.row].date + " " + data[indexPath.row].start_time
+                cell.estimatedTime.text = data[indexPath.row].estimated_time
                 cell.workedTime.text = data[indexPath.row].duration
+                cell.label.text = data[indexPath.row].label
+
             }
             return cell
         }
@@ -361,7 +366,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -446,9 +451,13 @@ extension ViewController: SidemenuViewControllerDelegate {
         }
         tableView.reloadData()
     }
-
+    
     func getProjects() -> [Project] {
         return projects
+    }
+    
+    func setProjectName(projectName: String){
+        naviItem.title = projectName
     }
     
     func appendProject(project: Project){

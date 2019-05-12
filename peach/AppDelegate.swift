@@ -12,7 +12,12 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    // 表示中のプロジェクトindex
+    var projectIndex = 0
+    // プロジェクトデータ
+    var projects:[Project] = []
+    // 選択されているプロジェクトのタスク（完了表示画面では 完了したタスク）
+    var data: [Task] = []
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -25,22 +30,58 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        print("applicationDidEnterBackground")
+        saveData()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        print("applicationWillEnterForeground")
+        loadData()
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        print("applicationDidBecomeActive")
+        loadData()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+        print("applicationWillTerminate")
+        saveData()
     }
 
-
+    func saveData() {
+        print("saveData")
+        // 内部で保持するデータを保存する
+        do {
+            let json = JSONEncoder()
+            UserDefaults.standard.set(projectIndex, forKey: "projectIndex")
+            let projectsJson = try json.encode(projects)
+            print(String(data: projectsJson, encoding: String.Encoding.utf8)!)
+            UserDefaults.standard.set(projectsJson, forKey: "projects")
+            UserDefaults.standard.synchronize()
+        }
+        catch {
+            print(error)
+        }
+    }
+    
+    func loadData() {
+        print("loadData")
+        do {
+            // 内部で保持するデータを読み込む
+            projectIndex = UserDefaults.standard.integer(forKey: "projectIndex")
+            
+            if UserDefaults.standard.object(forKey: "projects") != nil {
+                let projectsJson = UserDefaults.standard.object(forKey: "projects") as! Data
+                print(String(data: projectsJson, encoding: String.Encoding.utf8)!)
+                projects = try JSONDecoder().decode([Project].self, from: projectsJson)
+                print(projects.description)
+                data = projects[projectIndex].tasks
+            }
+        }
+        catch {
+            print(error)
+        }
+    }
 }
 

@@ -11,11 +11,38 @@ import SwiftReorder
 
 class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource, TaskCellDelegate, RegistTaskViewControllerDelegate {
     // 表示中のプロジェクトindex
-    var projectIndex = 0
+    var projectIndex:Int {
+        get {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            return appDelegate.projectIndex
+        }
+        set {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.projectIndex = newValue
+        }
+    }
     // プロジェクトデータ
-    var projects:[Project] = []
+    var projects:[Project] {
+        get {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            return appDelegate.projects
+        }
+        set {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.projects = newValue
+        }
+    }
     // 選択されているプロジェクトのタスク（完了表示画面では 完了したタスク）
-    var data: [Task] = []
+    var data: [Task] {
+        get {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            return appDelegate.data
+        }
+        set {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.data = newValue
+        }
+    }
     
     @IBOutlet weak var naviBar: UINavigationBar!
     @IBOutlet weak var naviItem: UINavigationItem!
@@ -37,6 +64,12 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("viewController did load.")
+        // delegateの初期化
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.reorder.delegate = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
         // 登録用画面の初期化
         // StoryBoardのインスタンスから、RegistTaskViewControllerを取得する
@@ -44,38 +77,45 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         registVC = storyboard.instantiateViewController(withIdentifier: "registTask") as? RegistTaskViewController
         registVC!.delegate = self
         
-        // テスト用データ
-        let project1 = Project()
-        project1.project_id = 0
-        project1.project_name="プロジェ１"
-        project1.tasks = []
-        projects.append(project1)
+        // サイドメニューのし初期化
+        sidemenuViewController.delegate = self
+        
+        // 保存されているデータの読み込み
+        //loadData()
+        
+        // テスト用データ(プロジェクト)
+        
+        if projects.count == -1 {
+            let project1 = Project()
+            project1.project_id = 0
+            project1.project_name="プロジェ１"
+            project1.tasks = []
+            projects.append(project1)
+        
+            var tasks : [Task] = []
+            for i in 1...5 {
+                let task = Task()
+                task.task_id = i
+                task.name = "タスク \(i)"
+                task.date = "05/12"
+                task.priority_flg = "0"
+                task.done_flg = "0"
+                task.duration = "1.0"
+                task.project_id = 0
+                task.start_time = "\(8+i):00"
+                tasks.append(task)
+            }
+            projects[0].tasks = tasks
+            data = tasks
+        }
         
         // デフォルトで先頭のプロジェクト名を表示
-        naviItem.title = projects[0].project_name
-        
-        sidemenuViewController.delegate = self
-        tableView.reorder.delegate = self
-        // delegateの初期化
-        tableView.delegate = self
-        tableView.dataSource = self
-        // セルの初期化
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        var tasks : [Task] = []
-        for i in 1...20 {
-            let task = Task()
-            task.task_id = i
-            task.name = "タスク \(i)"
-            task.date = "05/03"
-            task.priority_flg = "0"
-            task.done_flg = "0"
-            task.duration = "1.0"
-            task.project_id = 0
-            task.start_time = "\(8+i):00"
-            tasks.append(task)
-            projects[0].tasks.append(task)
+        if projects.count > 0 {
+            naviItem.title = projects[projectIndex].project_name
         }
-        data = tasks
+        else {
+            naviItem.title = ""
+        }
     }
     
     // タスク追加実行

@@ -536,13 +536,7 @@ extension ViewController: SidemenuViewControllerDelegate {
         hideSidemenu(animated: true)
         
         projectIndex = 0
-        data = []
-        for task in projects[projectIndex].tasks {
-            // TODO:画面の表示モードによって切り替えるべき
-            if task.done_flg == "0" {
-                data.append(task)
-            }
-        }
+        data = projects[0].tasks
         tableView.reloadData()
     }
     

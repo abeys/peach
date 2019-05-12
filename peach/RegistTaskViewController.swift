@@ -37,26 +37,22 @@ class RegistTaskViewController : UIViewController {
     @IBOutlet weak var btnCancel: UIButton!
     @IBOutlet weak var btnRegist: UIButton!
     
+    func labelDesign(_ label:UILabel) {
+        label.textColor = UIColor.gray
+        label.backgroundColor = UIColor.white
+        label.layer.borderColor = UIColor.gray.cgColor
+        label.layer.borderWidth = 0.5
+        label.layer.cornerRadius = 5.0
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         btnChange.delegate = self
         btnCancel.backgroundColor = UIColor.orange
         
-        duedate.textColor = UIColor.gray
-        duedate.backgroundColor = UIColor.white
-        duedate.layer.borderColor = UIColor.gray.cgColor
-        duedate.layer.borderWidth = 0.5
-        duedate.layer.cornerRadius = 5.0
-        starttime.textColor = UIColor.gray
-        starttime.backgroundColor = UIColor.white
-        starttime.layer.borderColor = UIColor.gray.cgColor
-        starttime.layer.borderWidth = 0.5
-        starttime.layer.cornerRadius = 5.0
-        span.textColor = UIColor.gray
-        span.backgroundColor = UIColor.white
-        span.layer.borderColor = UIColor.gray.cgColor
-        span.layer.borderWidth = 0.5
-        span.layer.cornerRadius = 5.0
+        labelDesign(duedate)
+        labelDesign(starttime)
+        labelDesign(span)
         
         NotificationCenter.default.addObserver(self, selector: #selector(RegistTaskViewController.changeNotifyTextField(sender:)), name: UITextField.textDidChangeNotification, object: nil)
         

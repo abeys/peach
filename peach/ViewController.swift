@@ -34,7 +34,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     private var isShownSidemenu: Bool {
         return sidemenuViewController.parent == self
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,17 +43,17 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         registVC = storyboard.instantiateViewController(withIdentifier: "registTask") as? RegistTaskViewController
         registVC!.delegate = self
-
+        
         // テスト用データ
         let project1 = Project()
         project1.project_id = 0
         project1.project_name="プロジェ１"
         project1.tasks = []
         projects.append(project1)
-
+        
         // デフォルトで先頭のプロジェクト名を表示
         naviItem.title = projects[0].project_name
-
+        
         sidemenuViewController.delegate = self
         tableView.reorder.delegate = self
         // delegateの初期化
@@ -230,7 +230,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             sidemenuViewController.showContentView(animated: animated)
         }
     }
-
+    
     private func hideSidemenu(animated: Bool) {
         if !isShownSidemenu { return }
         
@@ -240,7 +240,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             self.sidemenuViewController.view.removeFromSuperview()
         })
     }
-
+    
     // タスクの順番変更
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let item = data[sourceIndexPath.row]
@@ -273,9 +273,9 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 cell.taskName.text = task.name
                 cell.star.tag = indexPath.row
                 if task.priority_flg == "1" {
-                    cell.star.setImage(UIImage(named: "star-yellow"), for: .normal)
+                    cell.star.setImage(UIImage(named: "star02"), for: .normal)
                 } else {
-                    cell.star.setImage(UIImage(named: "star-white"), for: .normal)
+                    cell.star.setImage(UIImage(named: "star01"), for: .normal)
                 }
                 cell.task = task
                 cell.time.text = data[indexPath.row].start_time
@@ -301,7 +301,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -384,7 +384,7 @@ extension ViewController: SidemenuViewControllerDelegate {
         }
         tableView.reloadData()
     }
-
+    
     func getProjects() -> [Project] {
         return projects
     }
@@ -392,7 +392,7 @@ extension ViewController: SidemenuViewControllerDelegate {
     func setProjectName(projectName: String){
         naviItem.title = projectName
     }
-
+    
     func appendProject(project: Project){
         projects.append(project)
     }

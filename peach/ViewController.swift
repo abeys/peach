@@ -431,10 +431,10 @@ extension ViewController: SidemenuViewControllerDelegate {
     }
     // サイドメニューでプロジェクトを選択した際に呼ばれる
     func sidemenuViewController(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath) {
-        naviItem.title = projects[indexPath.row].project_name
+        naviItem.title = projects[0].project_name
         hideSidemenu(animated: true)
         
-        projectIndex = indexPath.row
+        projectIndex = 0
         data = []
         for task in projects[projectIndex].tasks {
             // TODO:画面の表示モードによって切り替えるべき
@@ -449,12 +449,14 @@ extension ViewController: SidemenuViewControllerDelegate {
         return projects
     }
     
-    func setProjectName(projectName: String){
-        naviItem.title = projectName
-    }
-
     func appendProject(project: Project){
         projects.append(project)
+    }
+
+    func selectProject(index: Int){
+        let proj = projects[index]
+        projects.remove(at: index)
+        projects.insert(proj, at: 0)
     }
 }
 

@@ -16,8 +16,8 @@ protocol SidemenuViewControllerDelegate: class {
     func sidemenuViewControllerDidRequestHiding(_ sidemenuViewController: SideMenuViewController, animated: Bool)
     func sidemenuViewController(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath)
     func getProjects() -> [Project]
-    func setProjectName(projectName: String)
     func appendProject(project: Project)
+    func selectProject(index: Int)
 }
 
 class SideMenuViewController: UIViewController {
@@ -177,6 +177,11 @@ extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let proj = projects[indexPath.row]
+        projects.remove(at: indexPath.row)
+        projects.insert(proj, at: 0)
+        self.tableView.reloadData()
+        delegate?.selectProject(index: indexPath.row)
         delegate?.sidemenuViewController(self, didSelectItemAt: indexPath)
     }
     

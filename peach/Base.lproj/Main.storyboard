@@ -46,14 +46,14 @@
                                 </items>
                             </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="75" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fu6-9N-LQJ">
-                                <rect key="frame" x="0.0" y="64" width="320" height="372"/>
+                                <rect key="frame" x="6" y="64" width="308" height="372"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="taskcell" id="lCS-1j-7QC" customClass="TaskCell" customModule="peach" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="75"/>
+                                        <rect key="frame" x="0.0" y="28" width="308" height="75"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="lCS-1j-7QC" id="Wai-Xy-hNC">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="308" height="75"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="タスク管理UI作成" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BP7-2O-oDK">
@@ -143,10 +143,10 @@
                             <constraint firstItem="QF5-UR-n9W" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="4iy-TP-QPP"/>
                             <constraint firstItem="QF5-UR-n9W" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="MiM-wH-8WX"/>
                             <constraint firstItem="fu6-9N-LQJ" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="SNy-u4-inq"/>
-                            <constraint firstItem="fu6-9N-LQJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="aQJ-hg-YdO"/>
+                            <constraint firstItem="fu6-9N-LQJ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="6" id="aQJ-hg-YdO"/>
                             <constraint firstItem="fu6-9N-LQJ" firstAttribute="top" secondItem="QF5-UR-n9W" secondAttribute="bottom" id="fLE-hx-DIQ"/>
                             <constraint firstItem="QF5-UR-n9W" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="mPj-nn-dUK"/>
-                            <constraint firstItem="fu6-9N-LQJ" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="mme-f2-7XY"/>
+                            <constraint firstItem="fu6-9N-LQJ" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-6" id="mme-f2-7XY"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -280,7 +280,7 @@
     <resources>
         <image name="add" width="24" height="24"/>
         <image name="back" width="24" height="24"/>
-        <image name="calendar" width="18" height="18"/>
+        <image name="calendar" width="24" height="24"/>
         <image name="circle3" width="225" height="225"/>
         <image name="reference" width="24" height="24"/>
         <image name="star01" width="64" height="64"/>

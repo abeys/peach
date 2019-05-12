@@ -57,6 +57,18 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         }
     }
     
+    // プロジェクトカラー
+    var projectColors: [ProjectColor] {
+        get {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            return appDelegate.projectColors
+        }
+        set {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.projectColors = newValue
+        }
+    }
+    
     @IBOutlet weak var naviBar: UINavigationBar!
     @IBOutlet weak var naviItem: UINavigationItem!
     @IBOutlet weak var tableView: UITableView!
@@ -75,9 +87,42 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         return sidemenuViewController.parent == self
     }
     
+    func initProjectColor() {
+        let p0 = ProjectColor()
+        p0.primary = UIColor.hex("#ffc0cb",1)
+        p0.secondary = UIColor.hex("#ffe0eb",1)
+        p0.textColor = UIColor.black
+        let p1 = ProjectColor()
+        p1.primary = UIColor.hex("#ffa500",1)
+        p1.secondary = UIColor.hex("#ffc530",1)
+        p1.textColor = UIColor.black
+        let p2 = ProjectColor()
+        p2.primary = UIColor.hex("#adff2f",1)
+        p2.secondary = UIColor.hex("#cdff4f",1)
+        p2.textColor = UIColor.black
+        let p3 = ProjectColor()
+        p3.primary = UIColor.hex("#87cdfa",1)
+        p3.secondary = UIColor.hex("#a7edfa",1)
+        p3.textColor = UIColor.black
+        let p4 = ProjectColor()
+        p4.primary = UIColor.hex("",1)
+        p4.secondary = UIColor.hex("",1)
+        p4.textColor = UIColor.black
+        let p5 = ProjectColor()
+        p5.primary = UIColor.hex("",1)
+        p5.secondary = UIColor.hex("",1)
+        p5.textColor = UIColor.black
+        
+        projectColors = [p0,p1,p2,p3,p4,p5]
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("viewController did load.")
+        
+        // プロジェクトカラーの初期化
+        initProjectColor()
+        
         // delegateの初期化
         tableView.delegate = self
         tableView.dataSource = self
@@ -129,19 +174,19 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         if projects.count > 0 {
             naviItem.title = projects[projectIndex].project_name
             // 全体の色をプロジェクトカラーに変更する
-            
+            let color = projectColors[projects[projectIndex].color_index]
             //　ナビゲーションバーの背景色
-            naviBar.barTintColor = .blue
+            naviBar.barTintColor = color.primary
             // ナビゲーションバーのアイテムの色　（戻る　＜　とか　読み込みゲージとか）
-            naviBar.tintColor = .white
+            naviBar.tintColor = color.textColor
             
             // ナビゲーションバーのテキストを変更する
             naviBar.titleTextAttributes = [
-                .foregroundColor: UIColor.white
+                .foregroundColor: color.textColor
             ]
             
             // 背景色
-            self.view.backgroundColor = .blue
+            self.view.backgroundColor = color.primary
         }
         else {
             naviItem.title = ""
@@ -184,8 +229,11 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 data.append(task)
                 projects[projectIndex].tasks.append(task)
                 tableView.insertRows(at: [IndexPath(row: data.count-1, section: 0)], with: .automatic)
+                tableView.reloadData()
             }
             else {
+                let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
+                cell?.isHighlighted = false
                 data.remove(at: index)
                 data.insert(task, at: index)
                 var tasks = projects[projectIndex].tasks
@@ -199,7 +247,11 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
     // 登録画面で[cancel」を押した際に実行される
     // 登録画面を非表示にするのみ
-    func didCancelRegistTask() {
+    func didCancelRegistTask(index:Int) {
+        if index > 0 {
+            let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
+            cell?.isHighlighted = false
+        }
         hideRegistTask(animated: true)
     }
     
@@ -394,7 +446,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-    
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -403,6 +455,8 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         switch content {
         case "edit":
             showRegistTask(animated: true, index: index)
+            let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
+            cell?.isHighlighted = true
         case "delete":
             data.remove(at: index)
             tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
@@ -495,19 +549,19 @@ extension ViewController: SidemenuViewControllerDelegate {
     func getProjects() -> [Project] {
         return projects
     }
-    
-    func setProjectName(projectName: String){
-        naviItem.title = projectName
-    }
-    
+
     func appendProject(project: Project){
         projects.append(project)
     }
 
-    func selectProject(index: Int){
-        let proj = projects[index]
+    func deleteProject(index:Int){
         projects.remove(at: index)
-        projects.insert(proj, at: 0)
+    }
+    
+    func moveProject(sourceIndex: Int, destinationIndex: Int){
+        let proj = projects[sourceIndex]
+        projects.remove(at: sourceIndex)
+        projects.insert(proj, at: destinationIndex)
     }
 }
 

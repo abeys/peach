@@ -20,6 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var data: [Task] = []
     // 作業中・完了モード
     var mode: Int = 0
+    //　プロジェクトカラー
+    var projectColors:[ProjectColor] = []
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -87,3 +89,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
+extension UIColor {
+    class func hex (_ string : String, _ alpha : CGFloat) -> UIColor {
+        let string_ = string.replacingOccurrences(of: "#", with: "")
+        let scanner = Scanner(string: string_ as String)
+        var color: UInt32 = 0
+        if scanner.scanHexInt32(&color) {
+            let r = CGFloat((color & 0xFF0000) >> 16) / 255.0
+            let g = CGFloat((color & 0x00FF00) >> 8) / 255.0
+            let b = CGFloat(color & 0x0000FF) / 255.0
+            return UIColor(red:r,green:g,blue:b,alpha:alpha)
+        } else {
+            return UIColor.white;
+        }
+    }
+}
+
+let peachColor = UIColor.hex("#ffeeef", 1)
+let taskBackground = UIColor.white

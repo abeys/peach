@@ -49,5 +49,15 @@ class TaskCell : UITableViewCell {
         let button = sender as! UIButton
         delegate?.execDone(button.tag)
     }
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        if (highlighted) {
+            self.contentView.backgroundColor = peachColor
+        }
+        else {
+            self.contentView.backgroundColor = taskBackground
+        }
+    }
 }
 

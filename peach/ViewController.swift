@@ -100,9 +100,11 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 task.task_id = i
                 task.name = "タスク \(i)"
                 task.date = "05/12"
+                task.estimated_time = "3h"
                 task.priority_flg = "0"
                 task.done_flg = "0"
-                task.duration = "1.0"
+                task.duration = "00:00"
+                task.label = "MTG"
                 task.project_id = 0
                 task.start_time = "\(8+i):00"
                 tasks.append(task)

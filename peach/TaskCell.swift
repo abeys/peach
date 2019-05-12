@@ -10,6 +10,7 @@ import UIKit
 
 protocol TaskCellDelegate: class {
     func changePriority(_ index:Int, _ priority:String)
+    func execDone(_ index:Int)
 }
 
 class TaskCell : UITableViewCell {
@@ -44,7 +45,9 @@ class TaskCell : UITableViewCell {
     @IBAction func timerPlayer(_ sender: Any) {
     }
     // タスク完了制御
-    @IBAction func doneExec(_ sender: Any) {
+    @IBAction func execDone(_ sender: Any) {
+        let button = sender as! UIButton
+        delegate?.execDone(button.tag)
     }
 }
 

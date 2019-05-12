@@ -36,7 +36,11 @@
                                                     <action selector="tapAddTask:" destination="BYZ-38-t0r" id="UNi-Lf-woC"/>
                                                 </connections>
                                             </barButtonItem>
-                                            <barButtonItem title="Item" image="reference" id="sUE-Ra-3Jz"/>
+                                            <barButtonItem title="Item" image="reference" id="sUE-Ra-3Jz">
+                                                <connections>
+                                                    <action selector="dispDone:" destination="BYZ-38-t0r" id="5et-fp-0RD"/>
+                                                </connections>
+                                            </barButtonItem>
                                         </rightBarButtonItems>
                                     </navigationItem>
                                 </items>
@@ -102,7 +106,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="Button" image="circle3"/>
                                                     <connections>
-                                                        <action selector="doneExec:" destination="lCS-1j-7QC" eventType="touchUpInside" id="5Vm-Ax-uph"/>
+                                                        <action selector="execDone:" destination="lCS-1j-7QC" eventType="touchUpInside" id="t2f-ci-9z0"/>
                                                     </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="05/13 12:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Yx-Ac-69X">

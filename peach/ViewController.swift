@@ -23,6 +23,17 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             
         }
     }
+    // 一覧表示モード(作業中タスク一覧/完了タスク一覧)
+    var mode:Int {
+        get {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            return appDelegate.mode
+        }
+        set {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.mode = newValue
+        }
+    }
     // プロジェクトデータ
     var projects:[Project] {
         get {
@@ -110,6 +121,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 tasks.append(task)
             }
             projects[0].tasks = tasks
+            projects[0].task_cnt = 5
             data = tasks
         }
         
@@ -134,6 +146,16 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         else {
             naviItem.title = ""
         }
+    }
+    
+    // 完了一覧表示
+    @IBAction func dispDone(_ sender: Any) {
+        if(mode == 0) {
+           mode = 1
+        } else {
+            mode = 0
+        }
+        tableView.reloadData()
     }
     
     // タスク追加実行
@@ -216,7 +238,6 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             task.date = dtFormatter.string(from: Date())
             task.start_time = "\(hour):" + String(format:"%02d",min)
             task.estimated_time = "3.0h"
-            task.duration = "0.5"
             task.task_id = 0 //TODO:idの振り方
             task.done_flg = "0"
             task.priority_flg = "0"
@@ -318,7 +339,13 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        var count:Int = 0;
+        if (mode == 0) {
+            count = projects[0].task_cnt
+        } else {
+            count = data.count - projects[0].task_cnt
+        }
+        return count
     }
     // プロジェクトに紐づくタスク一覧表示制御
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -326,26 +353,27 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             return spacer
         }
         if let cell = tableView.dequeueReusableCell(withIdentifier: "taskcell", for: indexPath) as? TaskCell {
-            let task = data[indexPath.row]
-            cell.delegate = self
-            let done_flg = data[indexPath.row].done_flg
-            if done_flg == "0" {
-                // TODO 配列の長さに応じたループ回数でないとエラーになる(現状は10回固定)
-                cell.date.text = task.date
-                cell.taskName.text = task.name
-                cell.star.tag = indexPath.row
-                if task.priority_flg == "1" {
-                    cell.star.setImage(UIImage(named: "star02"), for: .normal)
-                } else {
-                    cell.star.setImage(UIImage(named: "star01"), for: .normal)
-                }
-                cell.task = task
-                cell.date.text = data[indexPath.row].date + " " + data[indexPath.row].start_time
-                cell.estimatedTime.text = data[indexPath.row].estimated_time
-                cell.workedTime.text = data[indexPath.row].duration
-                cell.label.text = data[indexPath.row].label
-
+            var row:Int = indexPath.row;
+            if (mode == 1) {
+                row = indexPath.row + projects[0].task_cnt
             }
+            let task = data[row]
+            cell.delegate = self
+            // TODO 配列の長さに応じたループ回数でないとエラーになる(現状は10回固定)
+            cell.date.text = task.date
+            cell.taskName.text = task.name
+            cell.star.tag = indexPath.row
+            if task.priority_flg == "1" {
+                cell.star.setImage(UIImage(named: "star02"), for: .normal)
+            } else {
+                cell.star.setImage(UIImage(named: "star01"), for: .normal)
+            }
+            cell.task = task
+            cell.date.text = data[indexPath.row].date + " " + data[indexPath.row].start_time
+            cell.estimatedTime.text = data[indexPath.row].estimated_time
+            cell.workedTime.text = data[indexPath.row].duration
+            cell.label.text = data[indexPath.row].label
+
             return cell
         }
         return UITableViewCell()
@@ -403,6 +431,20 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         }, completion: {finish in
             self.tableView.reloadRows(at: [IndexPath(row: toIndex, section: 0)], with: .automatic)
         })
+    }
+    
+    // タスク完了制御
+    func execDone(_ index: Int) {
+        let item = data[index]
+        item.done_flg = "1"
+        // 完了タスクを一覧から削除
+        data.remove(at: index)
+        data.insert(item, at: projects[0].task_cnt - 1)
+        projects[0].tasks.remove(at: index)
+        projects[0].tasks.insert(item, at: projects[0].task_cnt - 1)
+        // 完了フラグを立てる
+        projects[0].task_cnt = projects[0].task_cnt - 1
+        tableView.reloadData()
     }
 }
 

@@ -428,15 +428,19 @@ extension ViewController: SidemenuViewControllerDelegate {
     func getProjects() -> [Project] {
         return projects
     }
-    
+
     func appendProject(project: Project){
         projects.append(project)
     }
 
-    func selectProject(index: Int){
-        let proj = projects[index]
+    func deleteProject(index:Int){
         projects.remove(at: index)
-        projects.insert(proj, at: 0)
+    }
+    
+    func moveProject(sourceIndex: Int, destinationIndex: Int){
+        let proj = projects[sourceIndex]
+        projects.remove(at: sourceIndex)
+        projects.insert(proj, at: destinationIndex)
     }
 }
 

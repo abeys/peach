@@ -17,7 +17,8 @@ protocol SidemenuViewControllerDelegate: class {
     func sidemenuViewController(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath)
     func getProjects() -> [Project]
     func appendProject(project: Project)
-    func selectProject(index: Int)
+    func deleteProject(index: Int)
+    func moveProject(sourceIndex: Int, destinationIndex: Int)
 }
 
 class SideMenuViewController: UIViewController {
@@ -88,6 +89,7 @@ class SideMenuViewController: UIViewController {
     }
     
     @objc private func backgroundTapped(sender: UITapGestureRecognizer) {
+        delegate?.sidemenuViewController(self, didSelectItemAt: IndexPath(row: 0, section: 0))
         hideContentView(animated: true) { (_) in
             self.willMove(toParent: nil)
             self.removeFromParent()
@@ -181,7 +183,7 @@ extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {
         projects.remove(at: indexPath.row)
         projects.insert(proj, at: 0)
         self.tableView.reloadData()
-        delegate?.selectProject(index: indexPath.row)
+        delegate?.moveProject(sourceIndex: indexPath.row, destinationIndex: 0)
         delegate?.sidemenuViewController(self, didSelectItemAt: indexPath)
     }
     
@@ -210,5 +212,6 @@ extension SideMenuViewController: TableViewReorderDelegate {
         let proj = projects[sourceIndexPath.row]
         projects.remove(at: sourceIndexPath.row)
         projects.insert(proj, at: destinationIndexPath.row)
+        delegate?.moveProject(sourceIndex: sourceIndexPath.row, destinationIndex: destinationIndexPath.row)
     }
 }

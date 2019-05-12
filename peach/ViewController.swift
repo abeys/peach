@@ -366,7 +366,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-    
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -455,19 +455,19 @@ extension ViewController: SidemenuViewControllerDelegate {
     func getProjects() -> [Project] {
         return projects
     }
-    
-    func setProjectName(projectName: String){
-        naviItem.title = projectName
-    }
-    
+
     func appendProject(project: Project){
         projects.append(project)
     }
 
-    func selectProject(index: Int){
-        let proj = projects[index]
+    func deleteProject(index:Int){
         projects.remove(at: index)
-        projects.insert(proj, at: 0)
+    }
+    
+    func moveProject(sourceIndex: Int, destinationIndex: Int){
+        let proj = projects[sourceIndex]
+        projects.remove(at: sourceIndex)
+        projects.insert(proj, at: destinationIndex)
     }
 }
 

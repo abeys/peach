@@ -370,6 +370,8 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         switch content {
         case "edit":
             showRegistTask(animated: true, index: index)
+            let cell = tableView.cellForRow(at: IndexPath(row: index, section: 0))
+            cell?.isHighlighted = true
         case "delete":
             data.remove(at: index)
             tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)

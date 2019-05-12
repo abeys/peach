@@ -36,4 +36,14 @@ class TaskCell : UITableViewCell {
             delegate?.changePriority(button.tag, "0")
         }
     }
+    
+    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+        super.setHighlighted(highlighted, animated: animated)
+        if (highlighted) {
+            self.contentView.backgroundColor = UIColor.lightGray
+        }
+        else {
+            self.contentView.backgroundColor = UIColor.white
+        }
+    }
 }

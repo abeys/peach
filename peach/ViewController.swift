@@ -411,10 +411,10 @@ extension ViewController: SidemenuViewControllerDelegate {
     }
     // サイドメニューでプロジェクトを選択した際に呼ばれる
     func sidemenuViewController(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath) {
-        naviItem.title = projects[indexPath.row].project_name
+        naviItem.title = projects[0].project_name
         hideSidemenu(animated: true)
         
-        projectIndex = indexPath.row
+        projectIndex = 0
         data = []
         for task in projects[projectIndex].tasks {
             // TODO:画面の表示モードによって切り替えるべき

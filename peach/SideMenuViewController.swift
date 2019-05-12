@@ -177,6 +177,11 @@ extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let proj = projects[indexPath.row]
+        projects.remove(at: indexPath.row)
+        projects.insert(proj, at: 0)
+        self.tableView.reloadData()
+        delegate?.selectProject(index: indexPath.row)
         delegate?.sidemenuViewController(self, didSelectItemAt: indexPath)
     }
     

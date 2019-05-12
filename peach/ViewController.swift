@@ -19,6 +19,8 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         set {
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             appDelegate.projectIndex = newValue
+            // プロジェクトの選択変更時
+            
         }
     }
     // プロジェクトデータ
@@ -112,6 +114,20 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         // デフォルトで先頭のプロジェクト名を表示
         if projects.count > 0 {
             naviItem.title = projects[projectIndex].project_name
+            // 全体の色をプロジェクトカラーに変更する
+            
+            //　ナビゲーションバーの背景色
+            naviBar.barTintColor = .blue
+            // ナビゲーションバーのアイテムの色　（戻る　＜　とか　読み込みゲージとか）
+            naviBar.tintColor = .white
+            
+            // ナビゲーションバーのテキストを変更する
+            naviBar.titleTextAttributes = [
+                .foregroundColor: UIColor.white
+            ]
+            
+            // 背景色
+            self.view.backgroundColor = .blue
         }
         else {
             naviItem.title = ""
@@ -207,11 +223,15 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         }
         // ナビゲーションバーの高さを取得する
         let navHeight = naviBar.frame.size.height + UIApplication.shared.statusBarFrame.size.height
-        
         // 表示するRegistTaskの大きさ、位置を計算する
         var contentRect = registVC!.view!.bounds
+        // 縦幅を必要な分に縮める
         contentRect.size.height = CGFloat(registVC!.height)
         contentRect.origin.y = navHeight - contentRect.height
+        // 横幅をテーブルビューの大きさに合わせる（６px）
+        contentRect.size.width = view.frame.width - 12
+        contentRect.origin.x = 6
+        
         registVC!.view!.frame = contentRect
         registVC!.view!.autoresizingMask = .flexibleWidth
         
@@ -414,10 +434,10 @@ extension ViewController: SidemenuViewControllerDelegate {
     }
     // サイドメニューでプロジェクトを選択した際に呼ばれる
     func sidemenuViewController(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath) {
-        naviItem.title = projects[indexPath.row].project_name
+        naviItem.title = projects[0].project_name
         hideSidemenu(animated: true)
         
-        projectIndex = indexPath.row
+        projectIndex = 0
         data = []
         for task in projects[projectIndex].tasks {
             // TODO:画面の表示モードによって切り替えるべき
@@ -438,6 +458,12 @@ extension ViewController: SidemenuViewControllerDelegate {
     
     func appendProject(project: Project){
         projects.append(project)
+    }
+
+    func selectProject(index: Int){
+        let proj = projects[index]
+        projects.remove(at: index)
+        projects.insert(proj, at: 0)
     }
 }
 

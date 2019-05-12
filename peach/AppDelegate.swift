@@ -18,9 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var projects:[Project] = []
     // 選択されているプロジェクトのタスク（完了表示画面では 完了したタスク）
     var data: [Task] = []
+    // 作業中・完了モード
+    var mode: Int = 0
     //　プロジェクトカラー
     var projectColors:[ProjectColor] = []
-    
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         return true

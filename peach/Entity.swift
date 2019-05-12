@@ -35,6 +35,8 @@ class Project : NSObject, Codable {
     var project_id : Int!
     // プロジェクト名
     var project_name : String!
+    // タスク数
+    var task_cnt : Int!
     // タスクオブジェクト
     var tasks : [Task] = []
     // プロジェクトカラー番号

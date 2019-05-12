@@ -36,6 +36,8 @@ class TaskCell : UITableViewCell {
             delegate?.changePriority(button.tag, "0")
         }
     }
+    // タイマーボタン
+    @IBOutlet weak var TimerButton: UIButton!
     // ラベル
     @IBOutlet weak var label: UILabel!
     // 経過・実績時間

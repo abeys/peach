@@ -396,7 +396,11 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 cell.estimatedTime.text = data[indexPath.row].estimated_time
                 cell.workedTime.text = data[indexPath.row].duration
                 cell.label.text = data[indexPath.row].label
-
+                // タイマーボタンのスタイル変更
+                cell.TimerButton.layer.borderColor = UIColor.gray.cgColor
+                cell.TimerButton.layer.borderWidth = 0.8
+                cell.TimerButton.layer.cornerRadius = 6.0
+                cell.TimerButton.backgroundColor = peachColor
             }
             return cell
         }

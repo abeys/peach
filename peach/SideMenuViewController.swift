@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftReorder
 
 protocol SidemenuViewControllerDelegate: class {
     func parentViewControllerForSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> UIViewController
@@ -61,6 +62,7 @@ class SideMenuViewController: UIViewController {
         
         tableView.frame = contentView.bounds
         tableView.separatorInset = .zero
+        tableView.reorder.delegate = self
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Default")
@@ -160,6 +162,10 @@ extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // ドラッグされているセルを返す
+        if let spacer = tableView.reorder.spacerCell(for: indexPath) {
+            return spacer
+        }
         let cell = tableView.dequeueReusableCell(withIdentifier: "Default", for: indexPath)
         if indexPath.section == 0 {
             cell.textLabel?.text = projects[indexPath.row].project_name
@@ -190,5 +196,14 @@ extension SideMenuViewController: UIGestureRecognizerDelegate {
             return false
         }
         return true
+    }
+}
+
+extension SideMenuViewController: TableViewReorderDelegate {
+    func tableView(_ tableView: UITableView, reorderRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        // Update data model
+        let proj = projects[sourceIndexPath.row]
+        projects.remove(at: sourceIndexPath.row)
+        projects.insert(proj, at: destinationIndexPath.row)
     }
 }

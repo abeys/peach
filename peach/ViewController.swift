@@ -85,7 +85,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         
         // テスト用データ(プロジェクト)
         
-        if projects.count == -1 {
+        if projects.count == 0 {
             let project1 = Project()
             project1.project_id = 0
             project1.project_name="プロジェ１"

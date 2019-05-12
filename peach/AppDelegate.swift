@@ -31,22 +31,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidEnterBackground(_ application: UIApplication) {
         print("applicationDidEnterBackground")
-        saveData()
+        //saveData()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         print("applicationWillEnterForeground")
-        loadData()
+        //loadData()
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         print("applicationDidBecomeActive")
-        loadData()
+        //loadData()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
         print("applicationWillTerminate")
-        saveData()
+        //saveData()
     }
 
     func saveData() {

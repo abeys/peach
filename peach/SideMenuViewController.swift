@@ -119,6 +119,7 @@ class SideMenuViewController: UIViewController {
             completion?(true)
         }
     }
+
     @objc func addProject(_ sender: UIButton) {
         let controller = UIAlertController(title: "新規プロジェクトの追加",
                                            message: "プロジェクト名を入力してください。",
@@ -146,6 +147,35 @@ class SideMenuViewController: UIViewController {
         controller.addAction(cancelAction)
         controller.addAction(addAction)
         self.present(controller, animated: true, completion: nil)
+    }
+    
+    func editProject(index:Int) {
+        let controller = UIAlertController(title: "プロジェクト名の編集",
+                                           message: "プロジェクト名を入力してください。",
+                                           preferredStyle: .alert)
+        controller.addTextField { textField in
+            textField.text = self.projects[index].project_name
+            textField.isSecureTextEntry = false
+            textField.keyboardAppearance = .dark
+        }
+        let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel, handler: nil)
+        
+        let addAction = UIAlertAction(title: "更新する",
+                                      style: .default) { action in
+                                        if let projectName = controller.textFields?.first?.text {
+                                            self.projects[index].project_name = projectName
+                                            self.tableView.reloadData()
+                                        }
+        }
+        controller.addAction(cancelAction)
+        controller.addAction(addAction)
+        self.present(controller, animated: true, completion: nil)
+    }
+
+    func deleteProject(index:Int) {
+        self.projects.remove(at: index)
+        delegate?.deleteProject(index: index)
+        self.tableView.reloadData()
     }
 }
 
@@ -193,6 +223,29 @@ extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return " ◆ " + sections[section]
+    }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let editAction = UIContextualAction(style: .normal,
+                                            title: "編集",
+                                            handler: { (action: UIContextualAction, view: UIView, completion: (Bool) -> Void) in
+                                                self.editProject(index: indexPath.row)
+                                                // 処理を実行できなかった場合はfalse
+                                                completion(false)
+        })
+        editAction.backgroundColor = UIColor(red: 101/255.0, green: 198/255.0, blue: 187/255.0, alpha: 1)
+        
+        let deleteAction = UIContextualAction(style: .destructive,
+                                              title: "削除",
+                                              handler: {(action: UIContextualAction, view: UIView, completion: (Bool) -> Void) in
+                                                self.deleteProject(index: indexPath.row)
+                                                // 処理を実行完了した場合はtrue
+                                                completion(true)
+        })
+        deleteAction.backgroundColor = UIColor(red: 214/255.0, green: 69/255.0, blue: 65/255.0, alpha: 1)
+
+        return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
     }
 }
 

@@ -67,7 +67,6 @@
                                                     <rect key="frame" x="181" y="46" width="105" height="22"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <state key="normal" title="Button"/>
                                                     <connections>
                                                         <action selector="timerPlayer:" destination="lCS-1j-7QC" eventType="touchUpInside" id="XRY-Bd-MPm"/>
                                                         <action selector="タイマーボタン:" destination="lCS-1j-7QC" eventType="touchUpInside" id="H0R-Ey-IC9"/>
@@ -80,7 +79,7 @@
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fpV-EM-W0C">
                                                     <rect key="frame" x="285" y="7" width="30" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <state key="normal" title="Button" image="star01"/>
+                                                    <state key="normal" image="star01"/>
                                                     <connections>
                                                         <action selector="priorityStar:" destination="lCS-1j-7QC" eventType="touchUpInside" id="jJy-qQ-4yI"/>
                                                     </connections>
@@ -104,7 +103,7 @@
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VnT-CL-9sm" userLabel="Done Icon">
                                                     <rect key="frame" x="15" y="13" width="20" height="20"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <state key="normal" title="Button" image="circle3"/>
+                                                    <state key="normal" image="circle3"/>
                                                     <connections>
                                                         <action selector="execDone:" destination="lCS-1j-7QC" eventType="touchUpInside" id="t2f-ci-9z0"/>
                                                     </connections>
@@ -126,6 +125,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="TimerButton" destination="h80-oR-9cq" id="W0i-hn-htU"/>
                                             <outlet property="date" destination="9Yx-Ac-69X" id="TBZ-LZ-S9f"/>
                                             <outlet property="estimatedTime" destination="bdl-M1-bu8" id="PkX-h6-V4t"/>
                                             <outlet property="label" destination="Sak-QP-PE1" id="Eqk-F0-gRL"/>

@@ -7,7 +7,7 @@
 //
 import Foundation
 
-class Task {
+class Task : NSObject, Codable {
     // タスクID
     var task_id : Int!
     // プロジェクトID
@@ -28,7 +28,7 @@ class Task {
     var rabel : String!
 }
 
-class Project {
+class Project : NSObject, Codable {
     // プロジェクトID
     var project_id : Int!
     // プロジェクト名

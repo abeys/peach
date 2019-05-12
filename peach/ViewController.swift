@@ -197,6 +197,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             task.name = ""
             task.date = dtFormatter.string(from: Date())
             task.start_time = "\(hour):" + String(format:"%02d",min)
+            task.estimated_time = "3.0h"
             task.duration = "0.5"
             task.task_id = 0 //TODO:idの振り方
             task.done_flg = "0"
@@ -308,7 +309,6 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             let done_flg = data[indexPath.row].done_flg
             if done_flg == "0" {
                 // TODO 配列の長さに応じたループ回数でないとエラーになる(現状は10回固定)
-                cell.taskId.text = String(task.task_id)
                 cell.date.text = task.date
                 cell.taskName.text = task.name
                 cell.star.tag = indexPath.row
@@ -318,8 +318,11 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                     cell.star.setImage(UIImage(named: "star01"), for: .normal)
                 }
                 cell.task = task
-                cell.time.text = data[indexPath.row].start_time
+                cell.date.text = data[indexPath.row].date + " " + data[indexPath.row].start_time
+                cell.estimatedTime.text = data[indexPath.row].estimated_time
                 cell.workedTime.text = data[indexPath.row].duration
+                cell.label.text = data[indexPath.row].label
+
             }
             return cell
         }

@@ -11,7 +11,7 @@ import UIKit
 protocol RegistTaskViewControllerDelegate: class {
 
     func didRegistTask(index:Int, task:Task)
-    func didCancelRegistTask()
+    func didCancelRegistTask(index:Int)
 }
 
 class RegistTaskViewController : UIViewController {
@@ -114,7 +114,7 @@ class RegistTaskViewController : UIViewController {
     
     @IBAction func clickCancel(_ sender: Any) {
         if delegate != nil {
-            delegate?.didCancelRegistTask()
+            delegate?.didCancelRegistTask(index: index!)
         }
     }
     

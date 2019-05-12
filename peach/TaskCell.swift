@@ -51,10 +51,10 @@ class TaskCell : UITableViewCell {
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         if (highlighted) {
-            self.contentView.backgroundColor = UIColor.lightGray
+            self.contentView.backgroundColor = peachColor
         }
         else {
-            self.contentView.backgroundColor = UIColor.white
+            self.contentView.backgroundColor = taskBackground
         }
     }
 }

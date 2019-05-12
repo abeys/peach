@@ -5,7 +5,7 @@
 //  Created by matsumura shiori on 2019/04/29.
 //  Copyright © 2019 matsumura shiori. All rights reserved.
 //
-import Foundation
+import UIKit
 
 class Task : NSObject, Codable {
     // タスクID
@@ -37,4 +37,15 @@ class Project : NSObject, Codable {
     var project_name : String!
     // タスクオブジェクト
     var tasks : [Task] = []
+    // プロジェクトカラー番号
+    var color_index : Int = 0
+}
+
+class ProjectColor {
+    // プロジェクトカラー
+    var primary : UIColor!
+    //　プロジェクトカラー（ちょっと薄めのやつ）
+    var secondary: UIColor!
+    // プロジェクトらカラーの背景に映える 文字色
+    var textColor: UIColor!
 }

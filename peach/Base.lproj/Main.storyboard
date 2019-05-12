@@ -142,6 +142,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5GD-vZ-jMM" customClass="PickerViewKeyboard" customModule="peach">
+                                <rect key="frame" x="8" y="70" width="304" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="calendar"/>
+                                <connections>
+                                    <action selector="clickChange:" destination="dDx-vB-i0b" eventType="touchUpInside" id="ApO-A2-9qh"/>
+                                </connections>
+                            </button>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="タスク名" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5sq-SG-yu7">
                                 <rect key="frame" x="8" y="32" width="304" height="30"/>
                                 <constraints>
@@ -214,14 +222,6 @@
                                 </state>
                                 <connections>
                                     <action selector="clickRegist:" destination="dDx-vB-i0b" eventType="touchUpInside" id="IBt-6G-2Uf"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5GD-vZ-jMM" customClass="PickerViewKeyboard" customModule="peach">
-                                <rect key="frame" x="287" y="70" width="25" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="B" image="calendar"/>
-                                <connections>
-                                    <action selector="clickChange:" destination="dDx-vB-i0b" eventType="touchUpInside" id="ApO-A2-9qh"/>
                                 </connections>
                             </button>
                         </subviews>

@@ -46,6 +46,8 @@ class TaskCell : UITableViewCell {
     // タスク完了制御
     @IBAction func doneExec(_ sender: Any) {
     
+    }
+    
     override func setHighlighted(_ highlighted: Bool, animated: Bool) {
         super.setHighlighted(highlighted, animated: animated)
         if (highlighted) {

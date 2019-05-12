@@ -20,12 +20,14 @@ class Task : NSObject, Codable {
     var date : String!
     // 開始時刻
     var start_time : String!
+    // 予定時間
+    var estimated_time : String!
     // 終了フラグ
     var done_flg : String!
     // 経過時間
     var duration : String!
     // ラベル
-    var rabel : String!
+    var label : String!
 }
 
 class Project : NSObject, Codable {

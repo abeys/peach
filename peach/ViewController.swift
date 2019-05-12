@@ -429,12 +429,14 @@ extension ViewController: SidemenuViewControllerDelegate {
         return projects
     }
     
-    func setProjectName(projectName: String){
-        naviItem.title = projectName
-    }
-
     func appendProject(project: Project){
         projects.append(project)
+    }
+
+    func selectProject(index: Int){
+        let proj = projects[index]
+        projects.remove(at: index)
+        projects.insert(proj, at: 0)
     }
 }
 

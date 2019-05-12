@@ -16,8 +16,8 @@ protocol SidemenuViewControllerDelegate: class {
     func sidemenuViewControllerDidRequestHiding(_ sidemenuViewController: SideMenuViewController, animated: Bool)
     func sidemenuViewController(_ sidemenuViewController: SideMenuViewController, didSelectItemAt indexPath: IndexPath)
     func getProjects() -> [Project]
-    func setProjectName(projectName: String)
     func appendProject(project: Project)
+    func selectProject(index: Int)
 }
 
 class SideMenuViewController: UIViewController {

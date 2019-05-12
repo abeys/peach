@@ -123,6 +123,10 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         // プロジェクトカラーの初期化
         initProjectColor()
         
+        // 下線を消す処理
+        naviBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        naviBar.shadowImage = UIImage()
+        
         // delegateの初期化
         tableView.delegate = self
         tableView.dataSource = self

@@ -222,6 +222,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         if index == -1 {
             data.append(task)
             projects[projectIndex].tasks.append(task)
+            projects[projectIndex].task_cnt += 1
             tableView.insertRows(at: [IndexPath(row: data.count-1, section: 0)], with: .automatic)
         }
         else {
@@ -229,9 +230,10 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             if (task.project_id != projectIndex) {
                 // 元のプロジェクトからタスクを削除
                 projects[task.project_id].tasks.remove(at: index)
+                projects[task.project_id].task_cnt -= 1
                 // 現在のプロジェクトの末尾に追加
-                data.append(task)
-                projects[projectIndex].tasks.append(task)
+                data.insert(task, at:projects[projectIndex].task_cnt-1)
+                projects[projectIndex].tasks.insert(task, at:projects[projectIndex].task_cnt-1)
                 tableView.insertRows(at: [IndexPath(row: data.count-1, section: 0)], with: .automatic)
                 tableView.reloadData()
             }
@@ -275,6 +277,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             let now = Date()
             let dtFormatter = DateFormatter()
             dtFormatter.dateFormat = "MM/dd"
+            /*
             let cal = Calendar.current
             var hour = cal.component(.hour, from: now)
             var min  = cal.component(.minute, from: now)
@@ -288,12 +291,14 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 // そうでなければ、30分に
                 min = 30
             }
-            
+            */
             let task = Task()
             task.name = ""
             task.date = dtFormatter.string(from: Date())
-            task.start_time = "\(hour):" + String(format:"%02d",min)
-            task.estimated_time = "3.0h"
+            //task.start_time = "\(hour):" + String(format:"%02d",min)
+            task.start_time = ""
+            task.estimated_time = "1.0"
+            task.duration = "00:00"
             task.task_id = 0 //TODO:idの振り方
             task.done_flg = "0"
             task.priority_flg = "0"
@@ -382,17 +387,15 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     }
     
     // タスクの順番変更
+    /*
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let item = data[sourceIndexPath.row]
-        let dest = data[destinationIndexPath.row]
         data.remove(at: sourceIndexPath.row)
         data.insert(item, at: destinationIndexPath.row)
         // projects.tasks 内の順番の入れ替え
-        let srcIndex = projects[projectIndex].tasks.firstIndex(where: {task in return task.name == item.name })
-        let desIndex = projects[projectIndex].tasks.firstIndex(where: {task in return task.name == dest.name })
-        projects[projectIndex].tasks.remove(at: srcIndex!)
-        projects[projectIndex].tasks.insert(item, at: desIndex!)
+        projects[projectIndex].tasks = data
     }
+    */
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var count:Int = 0;
@@ -419,6 +422,8 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             cell.date.text = task.date
             cell.taskName.text = task.name
             cell.star.tag = indexPath.row
+            cell.doneButton.tag = indexPath.row
+            cell.timerButton.tag = indexPath.row
             if task.priority_flg == "1" {
                 cell.star.setImage(UIImage(named: "star02"), for: .normal)
             } else {
@@ -430,10 +435,10 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             cell.workedTime.text = data[indexPath.row].duration
             cell.label.text = data[indexPath.row].label
             // タイマーボタンのスタイル変更
-            cell.TimerButton.layer.borderColor = UIColor.gray.cgColor
-            cell.TimerButton.layer.borderWidth = 0.8
-            cell.TimerButton.layer.cornerRadius = 6.0
-            cell.TimerButton.backgroundColor = peachColor
+            cell.timerButton.layer.borderColor = UIColor.gray.cgColor
+            cell.timerButton.layer.borderWidth = 0.8
+            cell.timerButton.layer.cornerRadius = 6.0
+            cell.timerButton.backgroundColor = peachColor
             
             return cell
         }
@@ -447,8 +452,8 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         let swipeCellB = UITableViewRowAction(style: .default, title: "削除") { action, index in
             self.swipeContentsTap(content: "delete", index: index.row)
         }
-        swipeCellA.backgroundColor = .blue
-        swipeCellB.backgroundColor = .red
+        swipeCellA.backgroundColor = swipeEditColor
+        swipeCellB.backgroundColor = swipeDeleteColor
         return [swipeCellB, swipeCellA]
     }
     
@@ -476,7 +481,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     // 星（優先度）をタップされた際に実行される
     func changePriority(_ index: Int, _ priority: String) {
         data[index].priority_flg = priority
-        var toIndex = data.count-1
+        var toIndex = projects[projectIndex].task_cnt-1
         if data[index].priority_flg == "1" {
             let item = data[index]
             data.remove(at: index)
@@ -485,15 +490,18 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         } else {
             let item = data[index]
             data.remove(at: index)
-            data.append(item)
+            data.insert(item, at:toIndex)
         }
         UIView.animate(withDuration: 0.5, animations: {
             self.tableView.beginUpdates()
             self.tableView.moveRow(at: IndexPath(row: index, section: 0), to: IndexPath(row: toIndex, section: 0))
             self.tableView.endUpdates()
         }, completion: {finish in
-            self.tableView.reloadRows(at: [IndexPath(row: toIndex, section: 0)], with: .automatic)
+            for i in 0..<self.projects[self.projectIndex].task_cnt {
+                self.tableView.reloadRows(at: [IndexPath(row: i, section: 0)], with: .automatic)
+            }
         })
+        projects[projectIndex].tasks = data
     }
     
     // タスク完了制御
@@ -518,11 +526,17 @@ extension ViewController: TableViewReorderDelegate {
         let item = data[sourceIndexPath.row]
         data.remove(at: sourceIndexPath.row)
         data.insert(item, at: destinationIndexPath.row)
+        // projects.tasks 内の順番の入れ替え
+        projects[projectIndex].tasks = data
     }
 }
 
 // スライドメニューバー処理
 extension ViewController: SidemenuViewControllerDelegate {
+    func getNavigationBarHight() -> CGFloat {
+        return naviBar.frame.size.height
+    }
+    
     func parentViewControllerForSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> UIViewController {
         return self
     }

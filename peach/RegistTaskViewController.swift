@@ -63,7 +63,7 @@ class RegistTaskViewController : UIViewController {
         taskName.text = task?.name
         duedate.text = task?.date
         starttime.text = task?.start_time
-        span.text = task?.duration
+        span.text = task?.estimated_time
         redraw()
     }
     
@@ -108,7 +108,7 @@ class RegistTaskViewController : UIViewController {
         task?.name = taskName.text
         task?.date = duedate.text
         task?.start_time = starttime.text
-        task?.duration = span.text
+        task?.estimated_time = span.text
         delegate?.didRegistTask(index: index!, task: task!)
     }
     

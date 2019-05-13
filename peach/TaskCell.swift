@@ -18,6 +18,8 @@ class TaskCell : UITableViewCell {
     var delegate : TaskCellDelegate?
     // タスクIDラベル
     @IBOutlet weak var taskId: UILabel!
+    // 完了ボタン
+    @IBOutlet weak var doneButton: UIButton!
     // タスク名ラベル
     @IBOutlet weak var taskName: UILabel!
     // 開始予定時間ラベル
@@ -38,13 +40,14 @@ class TaskCell : UITableViewCell {
         }
     }
     // タイマーボタン
-    @IBOutlet weak var TimerButton: UIButton!
+    @IBOutlet weak var timerButton: UIButton!
     // ラベル
     @IBOutlet weak var label: UILabel!
     // 経過・実績時間
     @IBOutlet weak var workedTime: UILabel!
     // タイマー制御
     @IBAction func timerPlayer(_ sender: Any) {
+        print("tap timer")
     }
     // タスク完了制御
     @IBAction func execDone(_ sender: Any) {

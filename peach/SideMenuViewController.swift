@@ -10,6 +10,7 @@ import UIKit
 import SwiftReorder
 
 protocol SidemenuViewControllerDelegate: class {
+    func getNavigationBarHight() -> CGFloat
     func parentViewControllerForSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> UIViewController
     func shouldPresentForSidemenuViewController(_ sidemenuViewController: SideMenuViewController) -> Bool
     func sidemenuViewControllerDidRequestShowing(_ sidemenuViewController: SideMenuViewController, contentAvailability: Bool, animated: Bool)
@@ -67,6 +68,8 @@ class SideMenuViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Default")
+        tableView.separatorStyle = .none
+        tableView.bounces = false
         contentView.addSubview(tableView)
         tableView.reloadData()
         
@@ -139,6 +142,7 @@ class SideMenuViewController: UIViewController {
                                             project.tasks = []
                                             project.project_name = projectName
                                             project.project_id = self.projects.count
+                                            project.task_cnt = 0
                                             self.projects.append(project)
                                             self.delegate?.appendProject(project:project)
                                             self.tableView.reloadData()
@@ -218,11 +222,16 @@ extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 60
+        return (delegate?.getNavigationBarHight())!
     }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return " ◆ " + sections[section]
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let label : UILabel = UILabel()
+        label.backgroundColor = peachDefaultColor
+        label.textColor = UIColor.black
+        label.text = " ◆ " + sections[section]
+        
+        return label
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -234,7 +243,7 @@ extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {
                                                 // 処理を実行できなかった場合はfalse
                                                 completion(false)
         })
-        editAction.backgroundColor = UIColor(red: 101/255.0, green: 198/255.0, blue: 187/255.0, alpha: 1)
+        editAction.backgroundColor = swipeEditColor
         
         let deleteAction = UIContextualAction(style: .destructive,
                                               title: "削除",
@@ -243,7 +252,7 @@ extension SideMenuViewController: UITableViewDataSource, UITableViewDelegate {
                                                 // 処理を実行完了した場合はtrue
                                                 completion(true)
         })
-        deleteAction.backgroundColor = UIColor(red: 214/255.0, green: 69/255.0, blue: 65/255.0, alpha: 1)
+        deleteAction.backgroundColor = swipeDeleteColor
 
         return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
     }

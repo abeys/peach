@@ -22,6 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var mode: Int = 0
     //　プロジェクトカラー
     var projectColors:[ProjectColor] = []
+    
+    // タイマー起動タスク
+    
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -106,4 +109,7 @@ extension UIColor {
 }
 
 let peachColor = UIColor.hex("#ffeeef", 1)
+let peachDefaultColor = UIColor.hex("#ffc0cb", 1)
 let taskBackground = UIColor.white
+let swipeEditColor = UIColor.hex("#65c6bb", 1)
+let swipeDeleteColor = UIColor.hex("#fa8072", 1)

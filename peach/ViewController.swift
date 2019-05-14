@@ -169,34 +169,6 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.loadData()
         
-        // テスト用データ(プロジェクト)
-//        if projects.count == 0 {
-//            let project1 = Project()
-//            project1.project_id = 0
-//            project1.project_name="プロジェ１"
-//            project1.tasks = []
-//            projects.append(project1)
-//
-//            var tasks : [Task] = []
-//            for i in 1...5 {
-//                let task = Task()
-//                task.task_id = appDelegate.getNextTaskId()
-//                task.name = "タスク \(i)"
-//                task.date = "05/12"
-//                task.estimated_time = "1.0"
-//                task.priority_flg = "0"
-//                task.done_flg = "0"
-//                task.duration = 0
-//                task.label = "MTG"
-//                task.project_id = 0
-//                task.start_time = "\(8+i):00"
-//                tasks.append(task)
-//            }
-//            projects[0].tasks = tasks
-//            projects[0].task_cnt = 5
-//            data = tasks
-//        }
-        
         // デフォルトで先頭のプロジェクト名を表示
         if projects.count > 0 {
             naviItem.title = projects[projectIndex].project_name
@@ -652,6 +624,21 @@ extension ViewController: SidemenuViewControllerDelegate {
         projectIndex = 0
         data = projects[0].tasks
         tableView.reloadData()
+        
+        // 全体の色をプロジェクトカラーに変更する
+        let color = projectColors[projects[projectIndex].color_index]
+        //　ナビゲーションバーの背景色
+        naviBar.barTintColor = color.primary
+        // ナビゲーションバーのアイテムの色　（戻る　＜　とか　読み込みゲージとか）
+        naviBar.tintColor = color.textColor
+        
+        // ナビゲーションバーのテキストを変更する
+        naviBar.titleTextAttributes = [
+            .foregroundColor: color.textColor
+        ]
+        
+        // 背景色
+        self.view.backgroundColor = color.primary
     }
     
     func getProjects() -> [Project] {

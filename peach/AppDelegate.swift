@@ -20,11 +20,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var data: [Task] = []
     // 作業中・完了モード
     var mode: Int = 0
+    // タイマー起動タスク
+    var workTaskId : Int = -1
+    // 開始時間
+    var workStartTime : Date?
+    // タスクID発番
+    var taskId : Int = 0
+    
     //　プロジェクトカラー
     var projectColors:[ProjectColor] = []
-    
-    // タイマー起動タスク
-    
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -90,6 +94,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print(error)
         }
     }
+    
+    func getNextTaskId() -> Int {
+        taskId += 1
+        return taskId
+    }
 }
 
 extension UIColor {
@@ -113,3 +122,9 @@ let peachDefaultColor = UIColor.hex("#ffc0cb", 1)
 let taskBackground = UIColor.white
 let swipeEditColor = UIColor.hex("#65c6bb", 1)
 let swipeDeleteColor = UIColor.hex("#fa8072", 1)
+
+func convDuration(_ duration:Int) -> String {
+    let hour = duration / 60
+    let min  = duration % 60
+    return "\(hour):" + String(format:"%02d",min)
+}

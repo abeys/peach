@@ -25,7 +25,7 @@ class Task : NSObject, Codable {
     // 終了フラグ
     var done_flg : String!
     // 経過時間
-    var duration : String!
+    var duration : Int = 0
     // ラベル
     var label : String!
 }

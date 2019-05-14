@@ -146,7 +146,7 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         //loadData()
         
         // テスト用データ(プロジェクト)
-        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         if projects.count == 0 {
             let project1 = Project()
             project1.project_id = 0
@@ -157,13 +157,13 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             var tasks : [Task] = []
             for i in 1...5 {
                 let task = Task()
-                task.task_id = i
+                task.task_id = appDelegate.getNextTaskId()
                 task.name = "タスク \(i)"
                 task.date = "05/12"
-                task.estimated_time = "3h"
+                task.estimated_time = "1.0"
                 task.priority_flg = "0"
                 task.done_flg = "0"
-                task.duration = "00:00"
+                task.duration = 0
                 task.label = "MTG"
                 task.project_id = 0
                 task.start_time = "\(8+i):00"
@@ -273,8 +273,9 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             registVC!.task = data[index]
         }
         else {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
             // 新規追加するタスクの初期値をセットする
-            let now = Date()
+            //let now = Date()
             let dtFormatter = DateFormatter()
             dtFormatter.dateFormat = "MM/dd"
             /*
@@ -298,8 +299,8 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             //task.start_time = "\(hour):" + String(format:"%02d",min)
             task.start_time = ""
             task.estimated_time = "1.0"
-            task.duration = "00:00"
-            task.task_id = 0 //TODO:idの振り方
+            task.duration = 0
+            task.task_id = appDelegate.getNextTaskId()
             task.done_flg = "0"
             task.priority_flg = "0"
             task.project_id = projectIndex
@@ -418,7 +419,6 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             }
             let task = data[row]
             cell.delegate = self
-            // TODO 配列の長さに応じたループ回数でないとエラーになる(現状は10回固定)
             cell.date.text = task.date
             cell.taskName.text = task.name
             cell.star.tag = indexPath.row
@@ -430,10 +430,15 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
                 cell.star.setImage(UIImage(named: "star01"), for: .normal)
             }
             cell.task = task
-            cell.date.text = data[indexPath.row].date + " " + data[indexPath.row].start_time
-            cell.estimatedTime.text = data[indexPath.row].estimated_time
-            cell.workedTime.text = data[indexPath.row].duration
-            cell.label.text = data[indexPath.row].label
+            cell.date.text = task.date + " " + task.start_time
+            cell.estimatedTime.text = task.estimated_time + " h"
+            cell.workedTime.text = convDuration(task.duration)
+            if task.label == "" {
+                cell.label.isHidden = true
+            }
+            else {
+                cell.label.text = task.label
+            }
             // タイマーボタンのスタイル変更
             cell.timerButton.layer.borderColor = UIColor.gray.cgColor
             cell.timerButton.layer.borderWidth = 0.8

@@ -127,6 +127,7 @@
                                             <outlet property="date" destination="9Yx-Ac-69X" id="TBZ-LZ-S9f"/>
                                             <outlet property="doneButton" destination="VnT-CL-9sm" id="z4I-vA-o1t"/>
                                             <outlet property="estimatedTime" destination="bdl-M1-bu8" id="PkX-h6-V4t"/>
+                                            <outlet property="imgTimer" destination="jRh-Pt-M8C" id="nGU-Rl-0MK"/>
                                             <outlet property="label" destination="Sak-QP-PE1" id="Eqk-F0-gRL"/>
                                             <outlet property="star" destination="fpV-EM-W0C" id="V36-hK-xMh"/>
                                             <outlet property="taskName" destination="BP7-2O-oDK" id="naG-Bg-URV"/>

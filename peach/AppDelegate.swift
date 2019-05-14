@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // タイマー起動タスク
     var workTaskId : Int = -1
     // 開始時間
-    var workStartTime : Date?
+    var workStartTime : Date = Date()
     // タスクID発番
     var taskId : Int = 0
     
@@ -42,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidEnterBackground(_ application: UIApplication) {
         print("applicationDidEnterBackground")
-        //saveData()
+        saveData()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -57,17 +57,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         print("applicationWillTerminate")
-        //saveData()
+        saveData()
     }
 
     func saveData() {
-        print("saveData")
         // 内部で保持するデータを保存する
         do {
-            let json = JSONEncoder()
             UserDefaults.standard.set(projectIndex, forKey: "projectIndex")
+            UserDefaults.standard.set(mode, forKey: "mode")
+            UserDefaults.standard.set(workTaskId, forKey: "workTaskId")
+            UserDefaults.standard.set(workStartTime.timeIntervalSince1970, forKey: "workStartTime")
+            UserDefaults.standard.set(taskId, forKey: "taskId")
+            let json = JSONEncoder()
             let projectsJson = try json.encode(projects)
-            print(String(data: projectsJson, encoding: String.Encoding.utf8)!)
+            //print(String(data: projectsJson, encoding: String.Encoding.utf8)!)
             UserDefaults.standard.set(projectsJson, forKey: "projects")
             UserDefaults.standard.synchronize()
         }
@@ -77,17 +80,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func loadData() {
-        print("loadData")
         do {
             // 内部で保持するデータを読み込む
             projectIndex = UserDefaults.standard.integer(forKey: "projectIndex")
-            
+            mode = UserDefaults.standard.integer(forKey: "mode")
+            workTaskId = UserDefaults.standard.integer(forKey: "workTaskId")
+            if UserDefaults.standard.object(forKey: "workStartTime") != nil {
+                workStartTime = Date(timeIntervalSince1970: UserDefaults.standard.double(forKey: "workStartTime"))
+            }
+            taskId = UserDefaults.standard.integer(forKey: "taskId")
             if UserDefaults.standard.object(forKey: "projects") != nil {
                 let projectsJson = UserDefaults.standard.object(forKey: "projects") as! Data
-                print(String(data: projectsJson, encoding: String.Encoding.utf8)!)
+                //print(String(data: projectsJson, encoding: String.Encoding.utf8)!)
                 projects = try JSONDecoder().decode([Project].self, from: projectsJson)
-                print(projects.description)
+                //print(projects.description)
                 data = projects[projectIndex].tasks
+            }
+            else {
+                let project1 = Project()
+                project1.project_id = 0
+                project1.project_name="プロジェ１"
+                project1.tasks = []
+                projects.append(project1)
+                
+                var tasks : [Task] = []
+                for i in 1...5 {
+                    let task = Task()
+                    task.task_id = getNextTaskId()
+                    task.name = "タスク \(i)"
+                    task.date = "05/12"
+                    task.estimated_time = "1.0"
+                    task.priority_flg = "0"
+                    task.done_flg = "0"
+                    task.duration = 0
+                    task.label = "MTG"
+                    task.project_id = 0
+                    task.start_time = "\(8+i):00"
+                    tasks.append(task)
+                }
+                projects[0].tasks = tasks
+                projects[0].task_cnt = 5
+                data = tasks
             }
         }
         catch {
@@ -122,6 +155,7 @@ let peachDefaultColor = UIColor.hex("#ffc0cb", 1)
 let taskBackground = UIColor.white
 let swipeEditColor = UIColor.hex("#65c6bb", 1)
 let swipeDeleteColor = UIColor.hex("#fa8072", 1)
+let taskWorkingBGColor = UIColor.hex("#ffffe0", 1)
 
 func convDuration(_ duration:Int) -> String {
     let hour = duration / 60

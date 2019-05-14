@@ -11,6 +11,7 @@ import UIKit
 protocol TaskCellDelegate: class {
     func changePriority(_ index:Int, _ priority:String)
     func execDone(_ index:Int)
+    func tapTimer(_ index:Int)
 }
 
 class TaskCell : UITableViewCell {
@@ -39,6 +40,7 @@ class TaskCell : UITableViewCell {
             delegate?.changePriority(button.tag, "0")
         }
     }
+    @IBOutlet weak var imgTimer: UIImageView!
     // タイマーボタン
     @IBOutlet weak var timerButton: UIButton!
     // ラベル
@@ -47,7 +49,8 @@ class TaskCell : UITableViewCell {
     @IBOutlet weak var workedTime: UILabel!
     // タイマー制御
     @IBAction func timerPlayer(_ sender: Any) {
-        print("tap timer")
+        let button = sender as! UIButton
+        delegate?.tapTimer(button.tag)
     }
     // タスク完了制御
     @IBAction func execDone(_ sender: Any) {

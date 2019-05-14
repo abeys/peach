@@ -56,6 +56,28 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             appDelegate.data = newValue
         }
     }
+    // タイマー実行タスクID
+    var workTaskId : Int {
+        get {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            return appDelegate.workTaskId
+        }
+        set {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.workTaskId = newValue
+        }
+    }
+    // タイマー起動時間
+    var workStartTime : Date {
+        get {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            return appDelegate.workStartTime
+        }
+        set {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.workStartTime = newValue as Date
+        }
+    }
     
     // プロジェクトカラー
     var projectColors: [ProjectColor] {
@@ -78,6 +100,8 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
     let sidemenuViewController = SideMenuViewController()
     let contentViewController = UINavigationController(rootViewController: UIViewController())
+    
+    var timer: Timer?
     
     var isShowRegistTask: Bool {
         return registVC?.parent == self
@@ -118,7 +142,6 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("viewController did load.")
         
         // プロジェクトカラーの初期化
         initProjectColor()
@@ -143,36 +166,36 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         sidemenuViewController.delegate = self
         
         // 保存されているデータの読み込み
-        //loadData()
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.loadData()
         
         // テスト用データ(プロジェクト)
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        if projects.count == 0 {
-            let project1 = Project()
-            project1.project_id = 0
-            project1.project_name="プロジェ１"
-            project1.tasks = []
-            projects.append(project1)
-        
-            var tasks : [Task] = []
-            for i in 1...5 {
-                let task = Task()
-                task.task_id = appDelegate.getNextTaskId()
-                task.name = "タスク \(i)"
-                task.date = "05/12"
-                task.estimated_time = "1.0"
-                task.priority_flg = "0"
-                task.done_flg = "0"
-                task.duration = 0
-                task.label = "MTG"
-                task.project_id = 0
-                task.start_time = "\(8+i):00"
-                tasks.append(task)
-            }
-            projects[0].tasks = tasks
-            projects[0].task_cnt = 5
-            data = tasks
-        }
+//        if projects.count == 0 {
+//            let project1 = Project()
+//            project1.project_id = 0
+//            project1.project_name="プロジェ１"
+//            project1.tasks = []
+//            projects.append(project1)
+//
+//            var tasks : [Task] = []
+//            for i in 1...5 {
+//                let task = Task()
+//                task.task_id = appDelegate.getNextTaskId()
+//                task.name = "タスク \(i)"
+//                task.date = "05/12"
+//                task.estimated_time = "1.0"
+//                task.priority_flg = "0"
+//                task.done_flg = "0"
+//                task.duration = 0
+//                task.label = "MTG"
+//                task.project_id = 0
+//                task.start_time = "\(8+i):00"
+//                tasks.append(task)
+//            }
+//            projects[0].tasks = tasks
+//            projects[0].task_cnt = 5
+//            data = tasks
+//        }
         
         // デフォルトで先頭のプロジェクト名を表示
         if projects.count > 0 {
@@ -445,6 +468,17 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
             cell.timerButton.layer.cornerRadius = 6.0
             cell.timerButton.backgroundColor = peachColor
             
+            // タイマー起動判定
+            if task.task_id == workTaskId {
+                cell.imgTimer.image = UIImage(named: "pause2")
+                let delta = Int(round(workStartTime.timeIntervalSinceNow / 60)) * -1
+                cell.workedTime.text = convDuration(task.duration + delta)
+                cell.taskName.font = UIFont.boldSystemFont(ofSize: 20)
+            }
+            else {
+                cell.imgTimer.image = UIImage(named: "timer")
+                cell.taskName.font = UIFont.systemFont(ofSize: 20)
+            }
             return cell
         }
         return UITableViewCell()
@@ -509,6 +543,27 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         projects[projectIndex].tasks = data
     }
     
+    // タイマーボタン押下時処理
+    func tapTimer(_ index: Int) {
+        let item = data[index]
+        if workTaskId == -1 {
+            // 誰も動いていない
+            timerStart(item.task_id)
+            // 1分おきのタイマーを起動
+            self.timer = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(ViewController.timerUpdate), userInfo: nil, repeats: true)
+        }
+        else if workTaskId == item.task_id {
+            // 停止が押された
+            timerStop(item.task_id)
+            self.timer?.invalidate()
+        }
+        else {
+            // 他が動いている
+            timerStop(workTaskId)
+            timerStart(item.task_id)
+        }
+    }
+    
     // タスク完了制御
     func execDone(_ index: Int) {
         let item = data[index]
@@ -521,6 +576,37 @@ class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSourc
         // 完了フラグを立てる
         projects[0].task_cnt = projects[0].task_cnt - 1
         tableView.reloadData()
+    }
+    
+    func timerStart(_ taskId : Int) {
+        workTaskId = taskId
+        workStartTime = Date()
+        // アニメーションを頑張る
+        // 画面の更新
+        for i in 0..<data.count {
+            if data[i].task_id == taskId {
+                tableView.reloadRows(at: [IndexPath(row: i, section: 0)], with: .automatic)
+            }
+        }
+    }
+    
+    func timerStop(_ taskId : Int) {
+        workTaskId = -1
+        let delta = Int(round(workStartTime.timeIntervalSinceNow / 60)) * -1
+        for i in 0..<data.count {
+            if data[i].task_id == taskId {
+                data[i].duration += delta
+                tableView.reloadRows(at: [IndexPath(row: i, section: 0)], with: .automatic)
+            }
+        }
+    }
+    
+    @objc func timerUpdate() {
+        for i in 0..<data.count {
+            if data[i].task_id == workTaskId {
+                tableView.reloadRows(at: [IndexPath(row: i, section: 0)], with: .automatic)
+            }
+        }
     }
 }
 
